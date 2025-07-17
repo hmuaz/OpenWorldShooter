@@ -1,10 +1,12 @@
 using UnityEngine;
+using Zenject;
 
 public sealed class Enemy : MonoBehaviour
 {
-    public Vector2Int CurrentGridCell;
-
+    [Inject] 
     private EnemySpatialGrid _enemyGrid;
+    
+    public Vector2Int CurrentGridCell;
 
     [SerializeField]
     private float _moveSpeed = 2f;
@@ -18,7 +20,6 @@ public sealed class Enemy : MonoBehaviour
 
     private void Start()
     {
-        _enemyGrid = FindObjectOfType<EnemySpatialGrid>();
         _enemyGrid.AddEnemy(this);
 
         PickNewTarget();

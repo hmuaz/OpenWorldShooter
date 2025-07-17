@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public sealed class PlayerController : MonoBehaviour
 {
+    [Inject] 
+    private EnemySpatialGrid _enemyGrid;
+    
     [SerializeField]
     private float _moveSpeed = 5f;
 
@@ -16,9 +20,6 @@ public sealed class PlayerController : MonoBehaviour
     private Camera _playerCamera;
 
     [SerializeField]
-    private EnemySpatialGrid _enemyGrid;
-
-    [SerializeField]
     private float _shootDistance = 100f;
 
     [SerializeField]
@@ -30,6 +31,7 @@ public sealed class PlayerController : MonoBehaviour
     private float _xRotation;
     
     private readonly List<Enemy> _nearbyEnemies = new();
+    
 
     private void Start()
     {
