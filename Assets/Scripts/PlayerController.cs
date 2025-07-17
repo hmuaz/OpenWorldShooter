@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public sealed class PlayerController : MonoBehaviour
@@ -11,7 +12,24 @@ public sealed class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform _cameraPivot;
 
+    [SerializeField]
+    private Camera _playerCamera;
+
+    [SerializeField]
+    private EnemySpatialGrid _enemyGrid;
+
+    [SerializeField]
+    private float _shootDistance = 100f;
+
+    [SerializeField]
+    private float _hitRadius = 0.5f;
+
+    [SerializeField]
+    private float _shootCheckArea = 10f; 
+
     private float _xRotation;
+    
+    private readonly List<Enemy> _nearbyEnemies = new();
 
     private void Start()
     {
@@ -20,7 +38,6 @@ public sealed class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // Mouse look
         float mouseX = Input.GetAxis("Mouse X") * _mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * _mouseSensitivity;
 
@@ -31,16 +48,59 @@ public sealed class PlayerController : MonoBehaviour
 
         _cameraPivot.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
 
-        // Movement
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 move = transform.right * horizontal + transform.forward * vertical;
         transform.position += move.normalized * _moveSpeed * Time.deltaTime;
 
-        // Shoot
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Ateş edildi!");
+            Shoot();
+        }
+    }
+
+    private void Shoot()
+    {
+        _nearbyEnemies.Clear();
+        _enemyGrid.GetEnemiesInArea(_playerCamera.transform.position, _shootCheckArea, _nearbyEnemies);
+
+        Vector3 origin = _playerCamera.transform.position;
+        Vector3 direction = _playerCamera.transform.forward;
+
+        Enemy closestEnemy = null;
+        float closestDistance = _shootDistance + 1f;
+
+        for (int index = 0; index < _nearbyEnemies.Count; index++)
+        {
+            Enemy enemy = _nearbyEnemies[index];
+            Vector3 toEnemy = enemy.transform.position - origin;
+            float projection = Vector3.Dot(toEnemy, direction.normalized);
+
+            if (projection < 0f || projection > _shootDistance)
+            {
+                continue;
+            }
+
+            Vector3 closestPoint = origin + direction.normalized * projection;
+            float distanceToLine = Vector3.Distance(enemy.transform.position, closestPoint);
+
+            if (distanceToLine <= _hitRadius && projection < closestDistance)
+            {
+                closestEnemy = enemy;
+                closestDistance = projection;
+            }
+            
+            Vector3 endPoint = origin + direction * _shootDistance;
+            Debug.DrawLine(origin, endPoint, Color.red, 0.5f);
+        }
+
+        if (closestEnemy != null)
+        {
+            closestEnemy.OnHit();
+        }
+        else
+        {
+            Debug.Log("Hiçbir şey vurulmadı.");
         }
     }
 }

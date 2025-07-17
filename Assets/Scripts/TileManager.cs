@@ -13,6 +13,7 @@ public sealed class TileManager : MonoBehaviour
     private int _radius = 3;
 
     private readonly Dictionary<Vector2Int, GameObject> _activeTiles = new Dictionary<Vector2Int, GameObject>();
+    
     private Vector2Int _lastPlayerTile;
 
     private void Start()
@@ -43,32 +44,32 @@ public sealed class TileManager : MonoBehaviour
                 needed.Add(tileCoord);
                 if (!_activeTiles.ContainsKey(tileCoord))
                 {
-                    Vector3 pos = new Vector3(tileCoord.x * 10f, 0f, tileCoord.y * 10f);
-                    GameObject tile = Instantiate(_tilePrefab, pos, Quaternion.Euler(90f, 0f, 0f), transform);
+                    Vector3 position = new Vector3(tileCoord.x * 10f, 0f, tileCoord.y * 10f);
+                    GameObject tile = Instantiate(_tilePrefab, position, Quaternion.Euler(90f, 0f, 0f), transform);
                     _activeTiles.Add(tileCoord, tile);
                 }
             }
         }
 
         List<Vector2Int> toRemove = new List<Vector2Int>();
-        foreach (var kvp in _activeTiles)
+        foreach (KeyValuePair<Vector2Int, GameObject> keyValuePair in _activeTiles)
         {
-            if (!needed.Contains(kvp.Key))
+            if (!needed.Contains(keyValuePair.Key))
             {
-                Destroy(kvp.Value);
-                toRemove.Add(kvp.Key);
+                Destroy(keyValuePair.Value);
+                toRemove.Add(keyValuePair.Key);
             }
         }
-        for (int i = 0; i < toRemove.Count; i++)
+        for (int index = 0; index < toRemove.Count; index++)
         {
-            _activeTiles.Remove(toRemove[i]);
+            _activeTiles.Remove(toRemove[index]);
         }
     }
 
-    private Vector2Int WorldToTile(Vector3 pos)
+    private Vector2Int WorldToTile(Vector3 position)
     {
-        int x = Mathf.FloorToInt(pos.x / 10f);
-        int z = Mathf.FloorToInt(pos.z / 10f);
+        int x = Mathf.FloorToInt(position.x / 10f);
+        int z = Mathf.FloorToInt(position.z / 10f);
         return new Vector2Int(x, z);
     }
 }
