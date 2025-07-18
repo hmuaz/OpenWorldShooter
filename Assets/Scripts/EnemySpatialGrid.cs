@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public sealed class EnemySpatialGrid
 {
+    [Inject]
+    private SignalCenter _signalCenter;
+    
     private readonly float _cellSize;
 
     private readonly Dictionary<Vector2Int, HashSet<Enemy>> _enemyGrid = new();
@@ -21,6 +25,7 @@ public sealed class EnemySpatialGrid
             _enemyGrid[cell] = set;
         }
         set.Add(enemy);
+        _signalCenter.Fire(new EnemyAmountChangedSignal(GetEnemyCount()));
         enemy.CurrentGridCell = cell;
     }
 
@@ -29,6 +34,7 @@ public sealed class EnemySpatialGrid
         if (_enemyGrid.TryGetValue(cell, out HashSet<Enemy> set))
         {
             set.Remove(enemy);
+            _signalCenter.Fire(new EnemyAmountChangedSignal(GetEnemyCount()));
             if (set.Count == 0)
             {
                 _enemyGrid.Remove(cell);
@@ -72,5 +78,16 @@ public sealed class EnemySpatialGrid
         int x = Mathf.FloorToInt(position.x / _cellSize);
         int z = Mathf.FloorToInt(position.z / _cellSize);
         return new Vector2Int(x, z);
+    }
+    
+    
+    public int GetEnemyCount()
+    {
+        int count = 0;
+        foreach (var set in _enemyGrid.Values)
+        {
+            count += set.Count;
+        }
+        return count;
     }
 }

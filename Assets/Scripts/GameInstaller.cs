@@ -15,6 +15,7 @@ public class GameInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
+        Container.Bind<SignalCenter>().AsSingle();
         Container.Bind<EnemySpatialGrid>().AsSingle().WithArguments(_enemyCellSize);
         Container.Bind<TileManager>().FromInstance(_tileManager).AsSingle();
         Container.Bind<PlayerController>().FromComponentInHierarchy().AsSingle();
