@@ -7,7 +7,7 @@ using EnemyModule;
 namespace PlayerModule
 {
     [RequireComponent(typeof(PlayerView))]
-    public class PlayerController : MonoBehaviour
+    public sealed class PlayerController : MonoBehaviour
     {
         [Inject] 
         private EnemySpatialGrid _enemyGrid;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 using PlayerModule;
-public class PlayerInstaller : MonoInstaller
+public sealed class PlayerInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {

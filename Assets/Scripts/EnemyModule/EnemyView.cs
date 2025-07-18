@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EnemyModule
 {
-    public class EnemyView : MonoBehaviour
+    public sealed class EnemyView : MonoBehaviour
     {
         [SerializeField] 
         private Color _hitColor = Color.red;

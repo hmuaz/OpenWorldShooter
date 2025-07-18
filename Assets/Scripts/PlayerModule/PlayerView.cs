@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PlayerModule
 {
-    public class PlayerView : MonoBehaviour
+    public sealed class PlayerView : MonoBehaviour
     {
         [SerializeField] 
         private ParticleSystem _shootEffect;

@@ -2,7 +2,7 @@ using UnityEngine;
 using Zenject;
 using EnemyModule;
 
-public class EnemyInstaller : MonoInstaller
+public sealed class EnemyInstaller : MonoInstaller
 {
     [SerializeField] 
     private float _cellSize = 10f;

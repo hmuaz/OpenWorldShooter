@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TileModule
 {
-    public class TileView : MonoBehaviour
+    public sealed class TileView : MonoBehaviour
     {
         [SerializeField] 
         private Renderer _renderer;

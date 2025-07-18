@@ -5,7 +5,7 @@ using Zenject;
 namespace EnemyModule
 {
     [RequireComponent(typeof(EnemyView))]
-    public class EnemyController : MonoBehaviour
+    public sealed class EnemyController : MonoBehaviour
     {
         [Inject] 
         private EnemySpatialGrid _enemyGrid;
