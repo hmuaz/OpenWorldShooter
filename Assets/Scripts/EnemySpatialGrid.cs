@@ -3,7 +3,6 @@ using UnityEngine;
 
 public sealed class EnemySpatialGrid : MonoBehaviour
 {
-    [SerializeField]
     private float _cellSize = 10f;
 
     private readonly Dictionary<Vector2Int, HashSet<Enemy>> _enemyGrid = new();

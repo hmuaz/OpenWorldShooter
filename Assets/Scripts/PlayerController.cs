@@ -6,6 +6,9 @@ public sealed class PlayerController : MonoBehaviour
 {
     [Inject] 
     private EnemySpatialGrid _enemyGrid;
+
+    [SerializeField] 
+    private int _damage = 25;
     
     [SerializeField]
     private float _moveSpeed = 5f;
@@ -31,7 +34,6 @@ public sealed class PlayerController : MonoBehaviour
     private float _xRotation;
     
     private readonly List<Enemy> _nearbyEnemies = new();
-    
 
     private void Start()
     {
@@ -98,7 +100,7 @@ public sealed class PlayerController : MonoBehaviour
 
         if (closestEnemy != null)
         {
-            closestEnemy.OnHit();
+            closestEnemy.OnHit(_damage);
         }
         else
         {

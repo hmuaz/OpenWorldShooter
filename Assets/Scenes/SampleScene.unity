@@ -678,7 +678,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a848deff3865a914f86eb0b297c8ec4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cellSize: 10
 --- !u!4 &558670329
 Transform:
   m_ObjectHideFlags: 0
@@ -1200,7 +1199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tilePrefab: {fileID: 614490124925269672, guid: 30a3b457f4e469f47a5f8000de4b57f9, type: 3}
   _player: {fileID: 241742758}
-  _radius: 3
+  _radius: 30
 --- !u!4 &1364252000
 Transform:
   m_ObjectHideFlags: 0
