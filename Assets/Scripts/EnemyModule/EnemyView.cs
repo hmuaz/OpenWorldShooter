@@ -66,7 +66,10 @@ namespace EnemyModule
 
         private void ResetColor()
         {
-            if (_renderer == null) { return; }
+            if (_renderer == null)
+            {
+                return;
+            }
             _renderer.material.color = _originalColor;
             _isHitEffectActive = false;
         }

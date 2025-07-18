@@ -21,7 +21,11 @@ namespace EnemyModule
         
         private float _fireTimer = 0f;
 
-        public Vector2Int CurrentGridCell { get; private set; }
+        public Vector2Int CurrentGridCell
+        {
+            get; 
+            private set;
+        }
 
         private void Awake()
         {
@@ -37,7 +41,10 @@ namespace EnemyModule
 
         private void Update()
         {
-            if (_model.IsDead) { return; }
+            if (_model.IsDead)
+            {
+                return;
+            }
 
             _enemyGrid.UpdateEnemyCell(this);
 
@@ -69,7 +76,10 @@ namespace EnemyModule
             {
                 EnemyController target = closeEnemies[i];
 
-                if (target == this || target._model.IsDead) { continue; }
+                if (target == this || target._model.IsDead)
+                {
+                    continue;
+                }
 
                 float dist = Vector3.Distance(transform.position, target.transform.position);
                 if (dist <= _model.ShootRange)
@@ -94,7 +104,10 @@ namespace EnemyModule
 
         public void OnHit(int damage)
         {
-            if (_model.IsDead) { return; }
+            if (_model.IsDead)
+            {
+                return;
+            }
 
             _view.PlayHitEffect();
 
@@ -109,7 +122,10 @@ namespace EnemyModule
 
         private void Die()
         {
-            if (_model.IsDead) { return; }
+            if (_model.IsDead)
+            {
+                return;
+            }
             _model.IsDead = true;
 
             //_view.PlayDeathEffect();
