@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using EnemyModule; 
 
 public sealed class EnemySpatialGrid
 {
@@ -9,29 +10,29 @@ public sealed class EnemySpatialGrid
     
     private readonly float _cellSize;
 
-    private readonly Dictionary<Vector2Int, HashSet<Enemy>> _enemyGrid = new();
+    private readonly Dictionary<Vector2Int, HashSet<EnemyController>> _enemyGrid = new();
 
     public EnemySpatialGrid(float cellSize)
     {
         _cellSize = cellSize;
     }
 
-    public void AddEnemy(Enemy enemy)
+    public void AddEnemy(EnemyController enemy)
     {
         Vector2Int cell = GetCell(enemy.transform.position);
-        if (!_enemyGrid.TryGetValue(cell, out HashSet<Enemy> set))
+        if (!_enemyGrid.TryGetValue(cell, out HashSet<EnemyController> set))
         {
-            set = new HashSet<Enemy>();
+            set = new HashSet<EnemyController>();
             _enemyGrid[cell] = set;
         }
         set.Add(enemy);
         _signalCenter.Fire(new EnemyAmountChangedSignal(GetEnemyCount()));
-        enemy.CurrentGridCell = cell;
+        enemy.SetGridCell(cell);
     }
 
-    public void RemoveEnemy(Enemy enemy, Vector2Int cell)
+    public void RemoveEnemy(EnemyController enemy, Vector2Int cell)
     {
-        if (_enemyGrid.TryGetValue(cell, out HashSet<Enemy> set))
+        if (_enemyGrid.TryGetValue(cell, out HashSet<EnemyController> set))
         {
             set.Remove(enemy);
             _signalCenter.Fire(new EnemyAmountChangedSignal(GetEnemyCount()));
@@ -42,7 +43,7 @@ public sealed class EnemySpatialGrid
         }
     }
 
-    public void UpdateEnemyCell(Enemy enemy)
+    public void UpdateEnemyCell(EnemyController enemy)
     {
         Vector2Int newCell = GetCell(enemy.transform.position);
         if (enemy.CurrentGridCell != newCell)
@@ -52,7 +53,7 @@ public sealed class EnemySpatialGrid
         }
     }
 
-    public void GetEnemiesInArea(Vector3 center, float areaSize, List<Enemy> resultList)
+    public void GetEnemiesInArea(Vector3 center, float areaSize, List<EnemyController> resultList)
     {
         int half = Mathf.CeilToInt(areaSize / (2f * _cellSize));
         Vector2Int centerCell = GetCell(center);
@@ -62,9 +63,9 @@ public sealed class EnemySpatialGrid
             for (int dz = -half; dz <= half; dz++)
             {
                 Vector2Int cell = new Vector2Int(centerCell.x + dx, centerCell.y + dz);
-                if (_enemyGrid.TryGetValue(cell, out HashSet<Enemy> set))
+                if (_enemyGrid.TryGetValue(cell, out HashSet<EnemyController> set))
                 {
-                    foreach (Enemy enemy in set)
+                    foreach (EnemyController enemy in set)
                     {
                         resultList.Add(enemy);
                     }
@@ -79,7 +80,6 @@ public sealed class EnemySpatialGrid
         int z = Mathf.FloorToInt(position.z / _cellSize);
         return new Vector2Int(x, z);
     }
-    
     
     public int GetEnemyCount()
     {

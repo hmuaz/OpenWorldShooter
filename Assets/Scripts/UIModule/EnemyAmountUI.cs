@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public sealed class EnemyAmountUI : MonoBehaviour
 {
-    [Inject] private SignalCenter _signalCenter;
-    [SerializeField] private TextMeshProUGUI _enemyAmountText;
+    [Inject] 
+    private SignalCenter _signalCenter;
+    
+    [SerializeField] 
+    private TextMeshProUGUI _enemyAmountText;
 
     private void OnEnable()
     {
