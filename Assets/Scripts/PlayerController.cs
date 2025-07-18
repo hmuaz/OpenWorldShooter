@@ -4,32 +4,35 @@ using Zenject;
 
 public sealed class PlayerController : MonoBehaviour
 {
+    private const float _distanceEpsilon = 1f;
+    
     [Inject] 
     private EnemySpatialGrid _enemyGrid;
 
     [SerializeField] 
     private int _damage = 25;
     
-    [SerializeField]
-    private float _moveSpeed = 5f;
-
-    [SerializeField]
-    private float _mouseSensitivity = 2f;
-
-    [SerializeField]
+    [SerializeField] 
     private Transform _cameraPivot;
-
-    [SerializeField]
+    
+    [SerializeField] 
     private Camera _playerCamera;
-
-    [SerializeField]
+    
+    [SerializeField] 
     private float _shootDistance = 100f;
-
-    [SerializeField]
+    [SerializeField] 
     private float _hitRadius = 0.5f;
-
-    [SerializeField]
+    [SerializeField] 
     private float _shootCheckArea = 10f; 
+    [SerializeField] 
+    private float _moveSpeed = 5f;
+    [SerializeField] 
+    private float _mouseSensitivity = 2f;
+    [SerializeField] 
+    private float _minVerticalAngle = -80f;
+    [SerializeField] 
+    private float _maxVerticalAngle = 80f;
+
 
     private float _xRotation;
     
@@ -48,7 +51,7 @@ public sealed class PlayerController : MonoBehaviour
         transform.Rotate(0f, mouseX, 0f);
 
         _xRotation -= mouseY;
-        _xRotation = Mathf.Clamp(_xRotation, -80f, 80f);
+        _xRotation = Mathf.Clamp(_xRotation, _minVerticalAngle, _maxVerticalAngle);
 
         _cameraPivot.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
 
@@ -72,7 +75,7 @@ public sealed class PlayerController : MonoBehaviour
         Vector3 direction = _playerCamera.transform.forward;
 
         Enemy closestEnemy = null;
-        float closestDistance = _shootDistance + 1f;
+        float closestDistance = _shootDistance + _distanceEpsilon;
 
         for (int index = 0; index < _nearbyEnemies.Count; index++)
         {
@@ -93,10 +96,10 @@ public sealed class PlayerController : MonoBehaviour
                 closestEnemy = enemy;
                 closestDistance = projection;
             }
-            
-            Vector3 endPoint = origin + direction * _shootDistance;
-            Debug.DrawLine(origin, endPoint, Color.red, 0.5f);
         }
+
+        Vector3 endPoint = origin + direction * _shootDistance;
+        Debug.DrawLine(origin, endPoint, Color.red, 0.5f);
 
         if (closestEnemy != null)
         {

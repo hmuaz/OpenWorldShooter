@@ -11,6 +11,10 @@ public sealed class TileManager : MonoBehaviour
 
     [SerializeField]
     private int _radius = 3;
+    
+    [SerializeField] 
+    private float _tileSize = 10f;
+
 
     private readonly Dictionary<Vector2Int, GameObject> _activeTiles = new Dictionary<Vector2Int, GameObject>();
     
@@ -44,8 +48,8 @@ public sealed class TileManager : MonoBehaviour
                 needed.Add(tileCoord);
                 if (!_activeTiles.ContainsKey(tileCoord))
                 {
-                    Vector3 position = new Vector3(tileCoord.x * 10f, 0f, tileCoord.y * 10f);
-                    GameObject tile = Instantiate(_tilePrefab, position, Quaternion.Euler(90f, 0f, 0f), transform);
+                    Vector3 position = new Vector3(tileCoord.x * _tileSize, 0f, tileCoord.y * _tileSize); //tileCoord.y çünkü quad kullanıyoruz.
+                    GameObject tile = Instantiate(_tilePrefab, position, Quaternion.Euler(90f, 0f, 0f), transform); //x 90f çünkü quad dik geliyor.
                     _activeTiles.Add(tileCoord, tile);
                 }
             }
@@ -68,8 +72,8 @@ public sealed class TileManager : MonoBehaviour
 
     private Vector2Int WorldToTile(Vector3 position)
     {
-        int x = Mathf.FloorToInt(position.x / 10f);
-        int z = Mathf.FloorToInt(position.z / 10f);
+        int x = Mathf.FloorToInt(position.x / _tileSize);
+        int z = Mathf.FloorToInt(position.z / _tileSize);
         return new Vector2Int(x, z);
     }
 }

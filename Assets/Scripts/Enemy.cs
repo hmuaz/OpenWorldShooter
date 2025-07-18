@@ -4,21 +4,31 @@ using Zenject;
 
 public sealed class Enemy : MonoBehaviour
 {
-    [Inject] private EnemySpatialGrid _enemyGrid;
+    [Inject] 
+    private EnemySpatialGrid _enemyGrid;
 
-    [SerializeField] private EnemyType _type;
-
-    public Vector2Int CurrentGridCell { get; set; }
-
-    private int _health;
-    private Vector3 _targetPosition;
-    private float _changeTargetDistance = 1.5f;
-    private bool _isDead = false;
+    [SerializeField] 
+    private EnemyType _type;
+    
+    [SerializeField] 
+    private float _moveAmount = 0.2f;
+    [SerializeField] 
+    private float _moveDuration = 0.1f;
 
     private float _fireCooldown = 1.0f;
     private float _fireTimer = 0f;
     private float _shootRange = 8f; 
+    private float _changeTargetDistance = 1.5f;
     private float _shootArea = 12f; 
+    
+    public Vector2Int CurrentGridCell { get; set; }
+
+    private int _health;
+    
+    private Vector3 _targetPosition;
+    
+    
+    private bool _isDead = false;
 
     public int Damage => _type.Damage;
     public int MaxHealth => _type.MaxHealth;
@@ -89,9 +99,12 @@ public sealed class Enemy : MonoBehaviour
 
     public void OnHit(int damage)
     {
-        if (_isDead) { return; }
+        if (_isDead)
+        {
+            return;
+        }
         
-        LeanTween.moveX(gameObject, transform.position.x + 0.2f, 0.1f).setLoopPingPong(1);
+        LeanTween.moveX(gameObject, transform.position.x + _moveAmount, _moveDuration) .setLoopPingPong(1);
 
         _health -= damage;
         Debug.Log($"Düşman hasar aldı: {damage}, kalan health: {_health}");

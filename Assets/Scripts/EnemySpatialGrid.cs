@@ -1,11 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class EnemySpatialGrid : MonoBehaviour
+public sealed class EnemySpatialGrid
 {
-    private float _cellSize = 10f;
+    private readonly float _cellSize;
 
     private readonly Dictionary<Vector2Int, HashSet<Enemy>> _enemyGrid = new();
+
+    public EnemySpatialGrid(float cellSize)
+    {
+        _cellSize = cellSize;
+    }
 
     public void AddEnemy(Enemy enemy)
     {
@@ -67,18 +72,5 @@ public sealed class EnemySpatialGrid : MonoBehaviour
         int x = Mathf.FloorToInt(position.x / _cellSize);
         int z = Mathf.FloorToInt(position.z / _cellSize);
         return new Vector2Int(x, z);
-    }
-    
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        foreach (KeyValuePair<Vector2Int, HashSet<Enemy>> pair in _enemyGrid)
-        {
-            Vector2Int cell = pair.Key;
-            Vector3 center = new Vector3(cell.x * _cellSize + _cellSize / 2f, 0f, cell.y * _cellSize + _cellSize / 2f);
-            Vector3 size = new Vector3(_cellSize, 0.1f, _cellSize);
-
-            Gizmos.DrawWireCube(center, size);
-        }
     }
 }
