@@ -24,7 +24,7 @@ namespace EnemyModule
 
         private void Awake()
         {
-            _renderer = transform.GetChild(0).GetComponent<Renderer>();
+            _renderer = transform.GetChild(0).GetChild(0).GetComponent<Renderer>();
             if (_renderer != null)
             {
                 _originalColor = _renderer.material.color;

@@ -5,11 +5,13 @@ public sealed class EnemyType : ScriptableObject
 {
     [SerializeField] 
     private int _damage = 10;
+    
     [SerializeField] 
     private int _maxHealth = 100;
     
     [SerializeField] 
     private float _moveSpeed = 2f;
+    
     [SerializeField] 
     private float _wanderRadius = 15f;
 

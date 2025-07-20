@@ -19,7 +19,8 @@ public sealed class EnemySpatialGrid
 
     public void AddEnemy(EnemyController enemy)
     {
-        Vector2Int cell = GetCell(enemy.transform.position);
+        Vector2Int cell = GetCell(enemy.Position);
+
         if (!_enemyGrid.TryGetValue(cell, out HashSet<EnemyController> set))
         {
             set = new HashSet<EnemyController>();
@@ -45,7 +46,8 @@ public sealed class EnemySpatialGrid
 
     public void UpdateEnemyCell(EnemyController enemy)
     {
-        Vector2Int newCell = GetCell(enemy.transform.position);
+        Vector2Int newCell = GetCell(enemy.Position);
+
         if (enemy.CurrentGridCell != newCell)
         {
             RemoveEnemy(enemy, enemy.CurrentGridCell);

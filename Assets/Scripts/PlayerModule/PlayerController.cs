@@ -83,7 +83,8 @@ namespace PlayerModule
             for (int index = 0; index < _nearbyEnemies.Count; index++)
             {
                 EnemyController enemy = _nearbyEnemies[index];
-                Vector3 toEnemy = enemy.transform.position - origin;
+
+                Vector3 toEnemy = enemy.Position - origin;
                 float projection = Vector3.Dot(toEnemy, direction.normalized);
 
                 if (projection < 0f || projection > _model.ShootDistance)
@@ -92,7 +93,7 @@ namespace PlayerModule
                 }
 
                 Vector3 closestPoint = origin + direction.normalized * projection;
-                float distanceToLine = Vector3.Distance(enemy.transform.position, closestPoint);
+                float distanceToLine = Vector3.Distance(enemy.Position, closestPoint);
 
                 if (distanceToLine <= _model.HitRadius && projection < closestDistance)
                 {

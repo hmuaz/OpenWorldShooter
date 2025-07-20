@@ -4,42 +4,40 @@ using Zenject;
 
 namespace EnemyModule
 {
-    [RequireComponent(typeof(EnemyView))]
-    public sealed class EnemyController : MonoBehaviour
+    
+    public sealed class EnemyController : ITickable
     {
-        [Inject] 
-        private EnemySpatialGrid _enemyGrid;
-
-        [SerializeField] 
-        private EnemyType _type;
-
-        private EnemyModel _model;
+        private readonly EnemyModel _model;
         
-        private EnemyView _view;
-
+        private readonly EnemyView _view;
+        
+        private readonly EnemySpatialGrid _enemyGrid;
+        
         private Vector3 _targetPosition;
         
-        private float _fireTimer = 0f;
+        private float _fireTimer;
 
         public Vector2Int CurrentGridCell
         {
             get; 
             private set;
         }
+        public bool IsDead => _model.IsDead;
 
-        private void Awake()
+        public EnemyController(
+            EnemyModel model,
+            EnemyView view,
+            EnemySpatialGrid enemyGrid)
         {
-            _view = GetComponent<EnemyView>();
-            _model = new EnemyModel(_type);
-        }
+            _model = model;
+            _view = view;
+            _enemyGrid = enemyGrid;
 
-        private void Start()
-        {
             _enemyGrid.AddEnemy(this);
             PickNewTarget();
         }
 
-        private void Update()
+        public void Tick()
         {
             if (_model.IsDead)
             {
@@ -48,15 +46,15 @@ namespace EnemyModule
 
             _enemyGrid.UpdateEnemyCell(this);
 
-            float distance = Vector3.Distance(transform.position, _targetPosition);
+            float distance = Vector3.Distance(_view.transform.position, _targetPosition);
             if (distance < _model.ChangeTargetDistance)
             {
                 PickNewTarget();
             }
             else
             {
-                Vector3 direction = (_targetPosition - transform.position).normalized;
-                transform.position += direction * _model.MoveSpeed * Time.deltaTime;
+                Vector3 direction = (_targetPosition - _view.transform.position).normalized;
+                _view.transform.position += direction * _model.MoveSpeed * Time.deltaTime;
             }
 
             _fireTimer -= Time.deltaTime;
@@ -70,22 +68,19 @@ namespace EnemyModule
         private void TryShootOtherEnemy()
         {
             List<EnemyController> closeEnemies = new List<EnemyController>();
-            _enemyGrid.GetEnemiesInArea(transform.position, _model.ShootArea, closeEnemies);
+            _enemyGrid.GetEnemiesInArea(_view.transform.position, _model.ShootArea, closeEnemies);
 
-            for (int i = 0; i < closeEnemies.Count; i++)
+            for (int index = 0; index < closeEnemies.Count; index++)
             {
-                EnemyController target = closeEnemies[i];
-
-                if (target == this || target._model.IsDead)
+                EnemyController target = closeEnemies[index];
+                if (target == this || target.IsDead)
                 {
                     continue;
                 }
-
-                float dist = Vector3.Distance(transform.position, target.transform.position);
+                float dist = Vector3.Distance(_view.transform.position, target._view.transform.position);
                 if (dist <= _model.ShootRange)
                 {
                     target.OnHit(_model.Damage);
-                    Debug.Log($"{gameObject.name} diğer enemy'e ateş etti! ({target.name})");
                     break;
                 }
             }
@@ -94,12 +89,7 @@ namespace EnemyModule
         private void PickNewTarget()
         {
             Vector2 randCircle = Random.insideUnitCircle * _model.WanderRadius;
-            _targetPosition = new Vector3(randCircle.x, transform.position.y, randCircle.y);
-        }
-
-        private void OnDestroy()
-        {
-            _enemyGrid.RemoveEnemy(this, CurrentGridCell);
+            _targetPosition = new Vector3(randCircle.x, _view.transform.position.y, randCircle.y);
         }
 
         public void OnHit(int damage)
@@ -108,12 +98,8 @@ namespace EnemyModule
             {
                 return;
             }
-
             _view.PlayHitEffect();
-
             _model.Health -= damage;
-            Debug.Log($"Düşman hasar aldı: {damage}, kalan health: {_model.Health}");
-
             if (_model.Health <= 0)
             {
                 Die();
@@ -127,16 +113,26 @@ namespace EnemyModule
                 return;
             }
             _model.IsDead = true;
+            
+            _enemyGrid.RemoveEnemy(this, CurrentGridCell);
 
+            Object.Destroy(_view.gameObject);
             //_view.PlayDeathEffect();
-
-            Debug.Log("Düşman öldü!");
-            Destroy(gameObject);
         }
 
         public void SetGridCell(Vector2Int cell)
         {
             CurrentGridCell = cell;
+        }
+        
+        public Vector3 Position
+        {
+            get { return _view.transform.position; }
+        }
+        
+        public void SetPosition(Vector3 position)
+        {
+            _view.transform.position = position;
         }
     }
 }
