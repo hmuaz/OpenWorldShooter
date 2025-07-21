@@ -34,7 +34,7 @@ namespace PlayerModule
             _health = 100;
             _damage = 25;
             _moveSpeed = 5f;
-            _mouseSensitivity = 2f;
+            _mouseSensitivity = 0.25f;
             _shootDistance = 100f;
             _hitRadius = 0.5f;
             _shootCheckArea = 10f;

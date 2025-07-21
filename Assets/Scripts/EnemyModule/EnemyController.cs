@@ -127,7 +127,10 @@ namespace EnemyModule
         
         public Vector3 Position
         {
-            get { return _view.transform.position; }
+            get
+            {
+                return _view.transform.position;
+            }
         }
         
         public void SetPosition(Vector3 position)

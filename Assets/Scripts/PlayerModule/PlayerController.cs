@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using PlayerModule;
-using EnemyModule; 
+using EnemyModule;
+using OpenWorldGame.Input;
 
 namespace PlayerModule
 {
@@ -11,6 +12,9 @@ namespace PlayerModule
     {
         [Inject] 
         private EnemySpatialGrid _enemyGrid;
+        
+        [Inject]
+        private InputController _inputController;
 
         private PlayerModel _model;
         
@@ -25,6 +29,8 @@ namespace PlayerModule
         private float _xRotation;
         
         private readonly List<EnemyController> _nearbyEnemies = new();
+        
+        
 
         private void Awake()
         {
@@ -39,8 +45,8 @@ namespace PlayerModule
 
         private void Update()
         {
-            HandleMouseLook();
-            HandleMovement();
+            HandleMouseLook(_inputController.LookInput);
+            HandleMovement(_inputController.MoveInput);
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -48,10 +54,10 @@ namespace PlayerModule
             }
         }
 
-        private void HandleMouseLook()
+        private void HandleMouseLook(Vector2 lookInput)
         {
-            float mouseX = Input.GetAxis("Mouse X") * _model.MouseSensitivity;
-            float mouseY = Input.GetAxis("Mouse Y") * _model.MouseSensitivity;
+            float mouseX = lookInput.x * _model.MouseSensitivity;
+            float mouseY = lookInput.y * _model.MouseSensitivity;
 
             transform.Rotate(0f, mouseX, 0f);
 
@@ -61,11 +67,9 @@ namespace PlayerModule
             _cameraPivot.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
         }
 
-        private void HandleMovement()
+        private void HandleMovement(Vector2 moveInput)
         {
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
-            Vector3 move = transform.right * horizontal + transform.forward * vertical;
+            Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
             transform.position += move.normalized * _model.MoveSpeed * Time.deltaTime;
         }
 
