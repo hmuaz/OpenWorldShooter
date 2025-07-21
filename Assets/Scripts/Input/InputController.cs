@@ -48,22 +48,22 @@ namespace OpenWorldGame.Input
             _inputActions.Disable();
         }
 
-        private void OnMove(InputAction.CallbackContext ctx)
+        private void OnMove(InputAction.CallbackContext context)
         {
-            _moveInput = ctx.ReadValue<Vector2>();
+            _moveInput = context.ReadValue<Vector2>();
         }
 
-        private void OnLook(InputAction.CallbackContext ctx)
+        private void OnLook(InputAction.CallbackContext context)
         {
-            _lookInput = ctx.ReadValue<Vector2>();
+            _lookInput = context.ReadValue<Vector2>();
         }
 
-        private void OnShootStarted(InputAction.CallbackContext ctx)
+        private void OnShootStarted(InputAction.CallbackContext context)
         {
             _isShooting = true;
         }
 
-        private void OnShootCanceled(InputAction.CallbackContext ctx)
+        private void OnShootCanceled(InputAction.CallbackContext context)
         {
             _isShooting = false;
         }
