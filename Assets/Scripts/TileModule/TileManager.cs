@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PlayerModule;
 using UnityEngine;
 
 namespace TileModule
@@ -33,6 +34,7 @@ namespace TileModule
         {
             if (!_player)
             {
+                _player = FindAnyObjectByType<PlayerView>().transform;
                 return;
             }
             

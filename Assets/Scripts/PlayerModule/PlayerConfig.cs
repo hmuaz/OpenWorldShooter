@@ -5,6 +5,7 @@ public sealed class PlayerConfig : ScriptableObject
 {
     public int maxHealth = 100;
     public int damage = 25;
+    
     public float moveSpeed = 5f;
     public float mouseSensitivity = 0.25f;
     public float shootDistance = 100f;

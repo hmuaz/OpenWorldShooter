@@ -1,91 +1,80 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using PlayerModule;
 using EnemyModule;
 using OpenWorldGame.Input;
 
 namespace PlayerModule
 {
-    [RequireComponent(typeof(PlayerView))]
-    public sealed class PlayerController : MonoBehaviour
+    public sealed class PlayerController : ITickable
     {
-        [Inject] 
-        private EnemySpatialGrid _enemyGrid;
-        
-        [Inject]
-        private InputController _inputController;
-        
-        [SerializeField] 
-        private PlayerConfig _playerConfig;
+        private readonly EnemySpatialGrid _enemyGrid;
+        private readonly InputController _inputController;
 
-        private PlayerModel _model;
-        
-        private PlayerView _view;
+        private readonly List<PlayerEntity> _players = new();
 
-        [SerializeField] 
-        private Transform _cameraPivot;
-        
-        [SerializeField] 
-        private Camera _playerCamera;
-
-        private float _xRotation;
-        
-        private readonly List<EnemyController> _nearbyEnemies = new();
-        
-        
-
-        private void Awake()
+        public PlayerController(
+            EnemySpatialGrid enemyGrid,
+            InputController inputController)
         {
-            _view = GetComponent<PlayerView>();
-            _model = new PlayerModel(_playerConfig);
+            _enemyGrid = enemyGrid;
+            _inputController = inputController;
         }
 
-        private void Start()
+        public void AddPlayer(PlayerView view, PlayerModel model, Transform cameraPivot, Camera playerCamera)
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            _players.Add(new PlayerEntity(view, model, cameraPivot, playerCamera));
         }
 
-        private void Update()
+        public void Tick()
         {
-            HandleMouseLook(_inputController.LookInput);
-            HandleMovement(_inputController.MoveInput);
-
-            if (Input.GetMouseButtonDown(0))
+            for (int playerIndex = 0; playerIndex < _players.Count; playerIndex++)
             {
-                Shoot();
+                PlayerEntity player = _players[playerIndex];
+
+                HandleMouseLook(player, _inputController.LookInput);
+                HandleMovement(player, _inputController.MoveInput);
+                Debug.Log(_inputController.MoveInput);
+                Debug.Log(_inputController.LookInput);
+
+                if (_inputController.IsShooting)
+                {
+                    Shoot(player);
+                }
             }
         }
 
-        private void HandleMouseLook(Vector2 lookInput)
+        private void HandleMouseLook(PlayerEntity player, Vector2 lookInput)
         {
-            float mouseX = lookInput.x * _model.MouseSensitivity;
-            float mouseY = lookInput.y * _model.MouseSensitivity;
+            float mouseX = lookInput.x * player.Model.MouseSensitivity;
+            float mouseY = lookInput.y * player.Model.MouseSensitivity;
 
-            transform.Rotate(0f, mouseX, 0f);
+            player.View.transform.Rotate(0f, mouseX, 0f);
 
-            _xRotation -= mouseY;
-            _xRotation = Mathf.Clamp(_xRotation, _model.MinVerticalAngle, _model.MaxVerticalAngle);
+            player.XRotation -= mouseY;
+            player.XRotation = Mathf.Clamp(player.XRotation, player.Model.MinVerticalAngle, player.Model.MaxVerticalAngle);
 
-            _cameraPivot.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+            player.CameraPivot.localRotation = Quaternion.Euler(player.XRotation, 0f, 0f);
         }
 
-        private void HandleMovement(Vector2 moveInput)
+        private void HandleMovement(PlayerEntity player, Vector2 moveInput)
         {
-            Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
-            transform.position += move.normalized * _model.MoveSpeed * Time.deltaTime;
+            Vector3 move = player.View.transform.right * moveInput.x + player.View.transform.forward * moveInput.y;
+            player.View.transform.position += move.normalized * player.Model.MoveSpeed * Time.deltaTime;
         }
 
-        private void Shoot()
+        private readonly List<EnemyController> _nearbyEnemies = new();
+
+        private void Shoot(PlayerEntity player)
         {
             _nearbyEnemies.Clear();
-            _enemyGrid.GetEnemiesInArea(_playerCamera.transform.position, _model.ShootCheckArea, _nearbyEnemies);
+            _enemyGrid.GetEnemiesInArea(player.PlayerCamera.transform.position, player.Model.ShootCheckArea, _nearbyEnemies);
 
-            Vector3 origin = _playerCamera.transform.position;
-            Vector3 direction = _playerCamera.transform.forward;
+            Vector3 origin = player.PlayerCamera.transform.position;
+            Vector3 direction = player.PlayerCamera.transform.forward;
 
             EnemyController closestEnemy = null;
-            float closestDistance = _model.ShootDistance + 1f; 
+            float closestDistance = player.Model.ShootDistance + 1f;
 
             for (int index = 0; index < _nearbyEnemies.Count; index++)
             {
@@ -94,7 +83,7 @@ namespace PlayerModule
                 Vector3 toEnemy = enemy.Position - origin;
                 float projection = Vector3.Dot(toEnemy, direction.normalized);
 
-                if (projection < 0f || projection > _model.ShootDistance)
+                if (projection < 0f || projection > player.Model.ShootDistance)
                 {
                     continue;
                 }
@@ -102,24 +91,37 @@ namespace PlayerModule
                 Vector3 closestPoint = origin + direction.normalized * projection;
                 float distanceToLine = Vector3.Distance(enemy.Position, closestPoint);
 
-                if (distanceToLine <= _model.HitRadius && projection < closestDistance)
+                if (distanceToLine <= player.Model.HitRadius && projection < closestDistance)
                 {
                     closestEnemy = enemy;
                     closestDistance = projection;
                 }
             }
 
-            Vector3 endPoint = origin + direction * _model.ShootDistance;
+            Vector3 endPoint = origin + direction * player.Model.ShootDistance;
             Debug.DrawLine(origin, endPoint, Color.red, 0.5f);
 
             if (closestEnemy != null)
             {
-                closestEnemy.OnHit(_model.Damage);
-                //_view.PlayShootEffect();
+                closestEnemy.OnHit(player.Model.Damage);
             }
-            else
+        }
+
+        public class PlayerEntity
+        {
+            public PlayerView View { get; }
+            public PlayerModel Model { get; }
+            public Transform CameraPivot { get; }
+            public Camera PlayerCamera { get; }
+            public float XRotation { get; set; }
+
+            public PlayerEntity(PlayerView view, PlayerModel model, Transform cameraPivot, Camera playerCamera)
             {
-                Debug.Log("Hiçbir şey vurulmadı.");
+                View = view;
+                Model = model;
+                CameraPivot = cameraPivot;
+                PlayerCamera = playerCamera;
+                XRotation = 0f;
             }
         }
     }
