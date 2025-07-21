@@ -6,7 +6,7 @@ namespace EnemyModule
     public sealed class EnemySpawner : MonoBehaviour
     {
         [SerializeField]
-        private EnemyType[] _enemyTypes; 
+        private EnemyConfig[] _enemyConfigs; 
 
         [SerializeField]
         private int _spawnCount = 10;
@@ -27,10 +27,10 @@ namespace EnemyModule
 
         private void SpawnEnemies()
         {
-            int enemyTypeCount = _enemyTypes.Length;
+            int enemyTypeCount = _enemyConfigs.Length;
             for (int index = 0; index < _spawnCount; index++)
             {
-                EnemyType type = _enemyTypes[Random.Range(0, enemyTypeCount)];
+                EnemyConfig config = _enemyConfigs[Random.Range(0, enemyTypeCount)];
 
                 Vector3 spawnPos = new Vector3(
                     Random.Range(_spawnAreaMin.x, _spawnAreaMax.x),
@@ -38,7 +38,7 @@ namespace EnemyModule
                     Random.Range(_spawnAreaMin.y, _spawnAreaMax.y)
                 );
 
-                EnemyController enemy = _enemyFactory.Create(type);
+                EnemyController enemy = _enemyFactory.Create(config);
                 enemy.SetPosition(spawnPos);
             }
         }

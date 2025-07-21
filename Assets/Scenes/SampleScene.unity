@@ -1528,7 +1528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d86d2fcbb33514cb42dfcccb176482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyTypes:
+  _enemyConfigs:
   - {fileID: 11400000, guid: 2eba00f673d645f48b6ba4b4d35bbd58, type: 2}
   - {fileID: 11400000, guid: 490361f898d0464419bc0970bf97559b, type: 2}
   _spawnCount: 10

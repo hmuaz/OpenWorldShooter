@@ -2,7 +2,7 @@ namespace EnemyModule
 {
     public sealed class EnemyModel
     {
-        private readonly EnemyType _type;
+        private readonly EnemyConfig _config;
         private int _health;
         private int _damage;
         private float _moveSpeed;
@@ -13,7 +13,7 @@ namespace EnemyModule
         private float _changeTargetDistance;
         private bool _isDead;
 
-        public EnemyType Type => _type;
+        public EnemyConfig Config => _config;
         public int Health
         {
             get => _health;
@@ -32,13 +32,13 @@ namespace EnemyModule
             set => _isDead = value;
         }
 
-        public EnemyModel(EnemyType type)
+        public EnemyModel(EnemyConfig config)
         {
-            _type = type;
-            _health = type.MaxHealth;
-            _damage = type.Damage;
-            _moveSpeed = type.MoveSpeed;
-            _wanderRadius = type.WanderRadius;
+            _config = config;
+            _health = config.maxHealth;
+            _damage = config.damage;
+            _moveSpeed = config.moveSpeed;
+            _wanderRadius = config.wanderRadius;
             _fireCooldown = 1.0f;
             _shootRange = 8f;
             _shootArea = 12f;

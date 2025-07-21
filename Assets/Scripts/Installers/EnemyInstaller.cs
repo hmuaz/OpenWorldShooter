@@ -16,7 +16,7 @@ public sealed class EnemyInstaller : MonoInstaller
         
         Container.BindInstance(_enemyViewPrefab).WhenInjectedInto<EnemyFactory>();
         
-        Container.BindFactory<EnemyType, EnemyController, EnemyFactory>()
+        Container.BindFactory<EnemyConfig, EnemyController, EnemyFactory>()
             .FromFactory<EnemyFactory>();
     }
 }

@@ -3,7 +3,7 @@ using Zenject;
 
 namespace EnemyModule
 {
-    public class EnemyFactory : PlaceholderFactory<EnemyType, EnemyController>
+    public class EnemyFactory : PlaceholderFactory<EnemyConfig, EnemyController>
     {
         private readonly DiContainer _container;
         
@@ -25,9 +25,9 @@ namespace EnemyModule
             _tickableManager = tickableManager;
         }
 
-        public override EnemyController Create(EnemyType type)
+        public override EnemyController Create(EnemyConfig config)
         {
-            EnemyModel model = new EnemyModel(type);
+            EnemyModel model = new EnemyModel(config);
             EnemyView view = _container.InstantiatePrefabForComponent<EnemyView>(_enemyViewPrefab);
             EnemyController controller = new EnemyController(model, view, _enemyGrid);
 
