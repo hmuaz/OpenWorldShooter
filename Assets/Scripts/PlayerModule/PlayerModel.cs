@@ -3,43 +3,27 @@ namespace PlayerModule
     public sealed class PlayerModel
     {
         private int _health;
-        private int _damage;
-
-        private float _moveSpeed;
-        private float _mouseSensitivity;
-        private float _shootDistance;
-        private float _hitRadius;
-        private float _shootCheckArea;
-        private float _minVerticalAngle;
-        private float _maxVerticalAngle;
+        private readonly PlayerConfig _config;
 
         public int Health
         {
             get => _health;
             set => _health = value;
         }
+        public int MaxHealth => _config.maxHealth;
+        public int Damage => _config.damage;
+        public float MoveSpeed => _config.moveSpeed;
+        public float MouseSensitivity => _config.mouseSensitivity;
+        public float ShootDistance => _config.shootDistance;
+        public float HitRadius => _config.hitRadius;
+        public float ShootCheckArea => _config.shootCheckArea;
+        public float MinVerticalAngle => _config.minVerticalAngle;
+        public float MaxVerticalAngle => _config.maxVerticalAngle;
 
-        public int Damage => _damage;
-
-        public float MoveSpeed => _moveSpeed;
-        public float MouseSensitivity => _mouseSensitivity;
-        public float ShootDistance => _shootDistance;
-        public float HitRadius => _hitRadius;
-        public float ShootCheckArea => _shootCheckArea;
-        public float MinVerticalAngle => _minVerticalAngle;
-        public float MaxVerticalAngle => _maxVerticalAngle;
-
-        public PlayerModel()
+        public PlayerModel(PlayerConfig config)
         {
-            _health = 100;
-            _damage = 25;
-            _moveSpeed = 5f;
-            _mouseSensitivity = 0.25f;
-            _shootDistance = 100f;
-            _hitRadius = 0.5f;
-            _shootCheckArea = 10f;
-            _minVerticalAngle = -80f;
-            _maxVerticalAngle = 80f;
+            _config = config;
+            _health = config.maxHealth;
         }
     }
 }

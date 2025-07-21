@@ -15,6 +15,9 @@ namespace PlayerModule
         
         [Inject]
         private InputController _inputController;
+        
+        [SerializeField] 
+        private PlayerConfig _playerConfig;
 
         private PlayerModel _model;
         
@@ -35,7 +38,7 @@ namespace PlayerModule
         private void Awake()
         {
             _view = GetComponent<PlayerView>();
-            _model = new PlayerModel();
+            _model = new PlayerModel(_playerConfig);
         }
 
         private void Start()

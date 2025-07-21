@@ -22,6 +22,15 @@ namespace EnemyModule
             get; 
             private set;
         }
+        
+        public Vector3 Position
+        {
+            get
+            {
+                return _view.transform.position;
+            }
+        }
+        
         public bool IsDead => _model.IsDead;
 
         public EnemyController(
@@ -125,13 +134,6 @@ namespace EnemyModule
             CurrentGridCell = cell;
         }
         
-        public Vector3 Position
-        {
-            get
-            {
-                return _view.transform.position;
-            }
-        }
         
         public void SetPosition(Vector3 position)
         {
