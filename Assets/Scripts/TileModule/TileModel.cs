@@ -4,17 +4,17 @@ namespace TileModule
 {
     public sealed class TileModel
     {
-        private readonly Vector2Int _tileCoord;
+        private readonly Vector2Int _tileCoordination;
         
         private readonly float _tileSize;
 
-        public Vector2Int TileCoord => _tileCoord;
+        public Vector2Int TileCoordination => _tileCoordination;
         
         public float TileSize => _tileSize;
         
-        public TileModel(Vector2Int tileCoord, float tileSize)
+        public TileModel(Vector2Int tileCoordination, float tileSize)
         {
-            _tileCoord = tileCoord;
+            _tileCoordination = tileCoordination;
             _tileSize = tileSize;
         }
     }

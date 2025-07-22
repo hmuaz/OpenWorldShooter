@@ -4,8 +4,11 @@ using EnemyModule;
 
 public sealed class EnemyInstaller : MonoInstaller
 {
-    [SerializeField] private float _cellSize = 10f;
-    [SerializeField] private EnemyView _enemyViewPrefab;
+    [SerializeField] 
+    private float _cellSize = 10f;
+    
+    [SerializeField] 
+    private EnemyView _enemyViewPrefab;
 
     public override void InstallBindings()
     {

@@ -1,7 +1,8 @@
 using UnityEngine;
 using Zenject;
 using PlayerModule;
-using EnemyModule; 
+using EnemyModule;
+using TileModule;
 
 namespace OpenWorldGame
 {
@@ -18,6 +19,9 @@ namespace OpenWorldGame
         
         [Inject] 
         private EnemyController _enemyController;
+        
+        [Inject] 
+        private TileController _tileController;
 
         [SerializeField] 
         private Vector3 _playerSpawnPosition = Vector3.zero;
@@ -38,6 +42,7 @@ namespace OpenWorldGame
         {
             // --- PLAYER ---
             var playerEntity = _playerFactory.CreatePlayer(_playerSpawnPosition);
+            _tileController.SetPlayer(playerEntity.View.transform);
             _playerController.AddPlayer(
                 playerEntity.View,
                 playerEntity.Model,

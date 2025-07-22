@@ -3,8 +3,10 @@ namespace EnemyModule
     public sealed class EnemyModel
     {
         private readonly EnemyConfig _config;
+        
         private int _health;
         private int _damage;
+        
         private float _moveSpeed;
         private float _wanderRadius;
         private float _fireCooldown;
@@ -14,18 +16,21 @@ namespace EnemyModule
         private bool _isDead;
 
         public EnemyConfig Config => _config;
+        
         public int Health
         {
             get => _health;
             set => _health = value;
         }
         public int Damage => _damage;
+        
         public float MoveSpeed => _moveSpeed;
         public float WanderRadius => _wanderRadius;
         public float FireCooldown => _fireCooldown;
         public float ShootRange => _shootRange;
         public float ShootArea => _shootArea;
         public float ChangeTargetDistance => _changeTargetDistance;
+        
         public bool IsDead
         {
             get => _isDead;

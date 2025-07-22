@@ -57,17 +57,17 @@ public sealed class EnemySpatialGrid
 
     public void GetEnemiesInArea(Vector3 center, float areaSize, List<EnemyEntity> resultList)
     {
-        int half = Mathf.CeilToInt(areaSize / (2f * _cellSize));
+        int halfCellCount = Mathf.CeilToInt(areaSize / (2f * _cellSize));
         Vector2Int centerCell = GetCell(center);
 
-        for (int dx = -half; dx <= half; dx++)
+        for (int deltaX = -halfCellCount; deltaX <= halfCellCount; deltaX++)
         {
-            for (int dz = -half; dz <= half; dz++)
+            for (int deltaZ = -halfCellCount; deltaZ <= halfCellCount; deltaZ++)
             {
-                Vector2Int cell = new Vector2Int(centerCell.x + dx, centerCell.y + dz);
-                if (_enemyGrid.TryGetValue(cell, out var set))
+                Vector2Int cell = new Vector2Int(centerCell.x + deltaX, centerCell.y + deltaZ);
+                if (_enemyGrid.TryGetValue(cell, out var enemySet))
                 {
-                    foreach (var enemy in set)
+                    foreach (var enemy in enemySet)
                     {
                         resultList.Add(enemy);
                     }

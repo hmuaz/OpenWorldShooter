@@ -16,7 +16,6 @@ public sealed class PlayerInstaller : MonoInstaller
 
         Container.BindInterfacesAndSelfTo<PlayerController>().AsSingle().NonLazy();
 
-        Container.Bind<PlayerFactory>().AsSingle()
-            .WithArguments(_playerViewPrefab, _playerConfig);
+        Container.Bind<PlayerFactory>().AsSingle() .WithArguments(_playerViewPrefab, _playerConfig);
     }
 }

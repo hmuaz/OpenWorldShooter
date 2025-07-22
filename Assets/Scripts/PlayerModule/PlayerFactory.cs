@@ -22,9 +22,13 @@ namespace PlayerModule
         {
             PlayerView view = _container.InstantiatePrefabForComponent<PlayerView>(_playerViewPrefab);
             view.transform.position = spawnPosition;
+            
             Transform cameraPivot = view.transform.GetChild(0);
+            
             Camera playerCamera = cameraPivot.GetChild(0).GetComponent<Camera>();
+            
             PlayerModel model = new PlayerModel(_playerConfig);
+            
             return new PlayerController.PlayerEntity(view, model, cameraPivot, playerCamera);
         }
     }
