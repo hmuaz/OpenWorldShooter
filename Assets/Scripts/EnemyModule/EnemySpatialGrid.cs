@@ -10,20 +10,20 @@ public sealed class EnemySpatialGrid
     
     private readonly float _cellSize;
 
-    private readonly Dictionary<Vector2Int, HashSet<EnemyController>> _enemyGrid = new();
+    private readonly Dictionary<Vector2Int, HashSet<EnemyEntity>> _enemyGrid = new();
 
     public EnemySpatialGrid(float cellSize)
     {
         _cellSize = cellSize;
     }
 
-    public void AddEnemy(EnemyController enemy)
+    public void AddEnemy(EnemyEntity enemy)
     {
         Vector2Int cell = GetCell(enemy.Position);
 
-        if (!_enemyGrid.TryGetValue(cell, out HashSet<EnemyController> set))
+        if (!_enemyGrid.TryGetValue(cell, out var set))
         {
-            set = new HashSet<EnemyController>();
+            set = new HashSet<EnemyEntity>();
             _enemyGrid[cell] = set;
         }
         set.Add(enemy);
@@ -31,9 +31,9 @@ public sealed class EnemySpatialGrid
         enemy.SetGridCell(cell);
     }
 
-    public void RemoveEnemy(EnemyController enemy, Vector2Int cell)
+    public void RemoveEnemy(EnemyEntity enemy, Vector2Int cell)
     {
-        if (_enemyGrid.TryGetValue(cell, out HashSet<EnemyController> set))
+        if (_enemyGrid.TryGetValue(cell, out var set))
         {
             set.Remove(enemy);
             _signalCenter.Fire(new EnemyAmountChangedSignal(GetEnemyCount()));
@@ -44,7 +44,7 @@ public sealed class EnemySpatialGrid
         }
     }
 
-    public void UpdateEnemyCell(EnemyController enemy)
+    public void UpdateEnemyCell(EnemyEntity enemy)
     {
         Vector2Int newCell = GetCell(enemy.Position);
 
@@ -55,7 +55,7 @@ public sealed class EnemySpatialGrid
         }
     }
 
-    public void GetEnemiesInArea(Vector3 center, float areaSize, List<EnemyController> resultList)
+    public void GetEnemiesInArea(Vector3 center, float areaSize, List<EnemyEntity> resultList)
     {
         int half = Mathf.CeilToInt(areaSize / (2f * _cellSize));
         Vector2Int centerCell = GetCell(center);
@@ -65,9 +65,9 @@ public sealed class EnemySpatialGrid
             for (int dz = -half; dz <= half; dz++)
             {
                 Vector2Int cell = new Vector2Int(centerCell.x + dx, centerCell.y + dz);
-                if (_enemyGrid.TryGetValue(cell, out HashSet<EnemyController> set))
+                if (_enemyGrid.TryGetValue(cell, out var set))
                 {
-                    foreach (EnemyController enemy in set)
+                    foreach (var enemy in set)
                     {
                         resultList.Add(enemy);
                     }

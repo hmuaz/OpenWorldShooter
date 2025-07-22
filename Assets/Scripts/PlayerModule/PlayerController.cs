@@ -14,7 +14,8 @@ namespace PlayerModule
 
         private readonly List<PlayerEntity> _players = new();
         
-        private readonly List<EnemyController> _nearbyEnemies = new();
+        private readonly List<EnemyEntity> _nearbyEnemies = new();
+
 
         public PlayerController(
             EnemySpatialGrid enemyGrid,
@@ -38,7 +39,7 @@ namespace PlayerModule
                 HandleMouseLook(player, _inputController.LookInput);
                 HandleMovement(player, _inputController.MoveInput);
 
-                if (_inputController.IsShooting)
+                if (_inputController.ShootTriggered)
                 {
                     Shoot(player);
                 }
@@ -70,12 +71,12 @@ namespace PlayerModule
             Vector3 origin = player.PlayerCamera.transform.position;
             Vector3 direction = player.PlayerCamera.transform.forward;
 
-            EnemyController closestEnemy = null;
+            EnemyEntity closestEnemy = null;
             float closestDistance = player.Model.ShootDistance + 1f;
 
             for (int index = 0; index < _nearbyEnemies.Count; index++)
             {
-                EnemyController enemy = _nearbyEnemies[index];
+                EnemyEntity enemy = _nearbyEnemies[index];
 
                 Vector3 toEnemy = enemy.Position - origin;
                 float projection = Vector3.Dot(toEnemy, direction.normalized);

@@ -49,6 +49,11 @@ namespace TileModule
 
         private void UpdateTiles()
         {
+            if (_player == null)
+            {
+                return;
+            }
+            
             Vector2Int playerTile = WorldToTile(_player.position);
 
             HashSet<Vector2Int> needed = new HashSet<Vector2Int>();

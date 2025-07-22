@@ -11,12 +11,18 @@ namespace OpenWorldGame.Input
         private Vector2 _moveInput;
         private Vector2 _lookInput;
         
-        private bool _isShooting;
+        // Sadece bu frame’de tetiklenen shoot
+        private bool _shootTriggered;
+        // Tuş basılı mı (hold için)
+        private bool _isShootingHeld;
 
         public Vector2 MoveInput => _moveInput;
         public Vector2 LookInput => _lookInput;
-        
-        public bool IsShooting => _isShooting;
+
+        // Tek tık event’i (o frame’de true)
+        public bool ShootTriggered => _shootTriggered;
+        // Tuş basılıysa (continuous)
+        public bool IsShootingHeld => _isShootingHeld;
 
         private void Awake()
         {
@@ -60,12 +66,21 @@ namespace OpenWorldGame.Input
 
         private void OnShootStarted(InputAction.CallbackContext context)
         {
-            _isShooting = true;
+            // Her shoot input’unda bir frame true olacak (trigger)
+            _shootTriggered = true;
+            // Basılı da oluyor
+            _isShootingHeld = true;
         }
 
         private void OnShootCanceled(InputAction.CallbackContext context)
         {
-            _isShooting = false;
+            _isShootingHeld = false;
+        }
+
+        private void LateUpdate()
+        {
+            // ShootTriggered sadece bir frame true kalacak
+            _shootTriggered = false;
         }
     }
 }

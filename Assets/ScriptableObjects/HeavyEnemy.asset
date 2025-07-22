@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b6a968c1295dcf4bbe7988520c60fcc, type: 3}
   m_Name: HeavyEnemy
   m_EditorClassIdentifier: 
-  _damage: 20
-  _maxHealth: 200
-  _moveSpeed: 2
-  _wanderRadius: 15
+  damage: 20
+  maxHealth: 200
+  moveSpeed: 1
+  wanderRadius: 15
