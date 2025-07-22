@@ -9,9 +9,12 @@ namespace PlayerModule
     public sealed class PlayerController : ITickable
     {
         private readonly EnemySpatialGrid _enemyGrid;
+        
         private readonly InputController _inputController;
 
         private readonly List<PlayerEntity> _players = new();
+        
+        private readonly List<EnemyController> _nearbyEnemies = new();
 
         public PlayerController(
             EnemySpatialGrid enemyGrid,
@@ -34,8 +37,6 @@ namespace PlayerModule
 
                 HandleMouseLook(player, _inputController.LookInput);
                 HandleMovement(player, _inputController.MoveInput);
-                Debug.Log(_inputController.MoveInput);
-                Debug.Log(_inputController.LookInput);
 
                 if (_inputController.IsShooting)
                 {
@@ -46,24 +47,20 @@ namespace PlayerModule
 
         private void HandleMouseLook(PlayerEntity player, Vector2 lookInput)
         {
-            float mouseX = lookInput.x * player.Model.MouseSensitivity;
-            float mouseY = lookInput.y * player.Model.MouseSensitivity;
-
-            player.View.transform.Rotate(0f, mouseX, 0f);
-
-            player.XRotation -= mouseY;
-            player.XRotation = Mathf.Clamp(player.XRotation, player.Model.MinVerticalAngle, player.Model.MaxVerticalAngle);
-
-            player.CameraPivot.localRotation = Quaternion.Euler(player.XRotation, 0f, 0f);
+            player.View.Look(
+                lookInput,
+                ref player.xRotation,
+                player.Model.MouseSensitivity,
+                player.Model.MinVerticalAngle,
+                player.Model.MaxVerticalAngle,
+                player.CameraPivot
+            );
         }
 
         private void HandleMovement(PlayerEntity player, Vector2 moveInput)
         {
-            Vector3 move = player.View.transform.right * moveInput.x + player.View.transform.forward * moveInput.y;
-            player.View.transform.position += move.normalized * player.Model.MoveSpeed * Time.deltaTime;
+            player.View.Move(moveInput, player.Model.MoveSpeed);
         }
-
-        private readonly List<EnemyController> _nearbyEnemies = new();
 
         private void Shoot(PlayerEntity player)
         {
@@ -110,10 +107,15 @@ namespace PlayerModule
         public class PlayerEntity
         {
             public PlayerView View { get; }
+            
             public PlayerModel Model { get; }
+            
             public Transform CameraPivot { get; }
+            
             public Camera PlayerCamera { get; }
-            public float XRotation { get; set; }
+            
+            public float xRotation;
+
 
             public PlayerEntity(PlayerView view, PlayerModel model, Transform cameraPivot, Camera playerCamera)
             {
@@ -121,7 +123,7 @@ namespace PlayerModule
                 Model = model;
                 CameraPivot = cameraPivot;
                 PlayerCamera = playerCamera;
-                XRotation = 0f;
+                xRotation = 0f;
             }
         }
     }
