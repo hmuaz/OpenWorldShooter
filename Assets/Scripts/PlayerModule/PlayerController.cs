@@ -118,16 +118,12 @@ namespace PlayerModule
             
             public Camera PlayerCamera { get; }
             
-            public float xRotation;
-
-
             public PlayerEntity(PlayerView view, PlayerModel model, Transform cameraPivot, Camera playerCamera)
             {
                 View = view;
                 Model = model;
                 CameraPivot = cameraPivot;
                 PlayerCamera = playerCamera;
-                xRotation = 0f;
             }
         }
     }
