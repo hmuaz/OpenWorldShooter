@@ -46,7 +46,6 @@ namespace TileModule
             {
                 _lastPlayerTile = playerTile;
                 UpdateTiles();
-                HighlightPlayerTile(playerTile);
             }
         }
 
@@ -96,16 +95,6 @@ namespace TileModule
             return new Vector2Int(x, z);
         }
 
-        private void HighlightPlayerTile(Vector2Int playerTileCoord)
-        {
-            _lastHighlighted?.Reset();
-            if (_activeTiles.TryGetValue(playerTileCoord, out var tile))
-            {
-                tile.Highlight();
-                _lastHighlighted = tile;
-            }
-        }
-        
         public void SetPlayer(Transform player)
         {
             _player = player;
