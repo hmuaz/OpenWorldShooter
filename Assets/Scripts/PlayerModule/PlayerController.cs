@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using EnemyModule;
+using OpenWorldGame.Camera;
 using OpenWorldGame.Input;
 
 namespace PlayerModule
@@ -15,7 +16,9 @@ namespace PlayerModule
         private readonly List<PlayerEntity> _players = new();
         
         private readonly List<EnemyEntity> _nearbyEnemies = new();
-
+        
+        [Inject]
+        private CameraController _cameraController;
 
         public PlayerController(
             EnemySpatialGrid enemyGrid,
@@ -48,13 +51,13 @@ namespace PlayerModule
 
         private void HandleMouseLook(PlayerEntity player, Vector2 lookInput)
         {
-            player.View.Look(
+            _cameraController.HandleLook(
                 lookInput,
-                ref player.xRotation,
+                player.View.transform,
+                player.CameraPivot,
                 player.Model.MouseSensitivity,
                 player.Model.MinVerticalAngle,
-                player.Model.MaxVerticalAngle,
-                player.CameraPivot
+                player.Model.MaxVerticalAngle
             );
         }
 

@@ -1,3 +1,4 @@
+using OpenWorldGame.Camera;
 using OpenWorldGame.Input;
 using UnityEngine;
 using Zenject;
@@ -13,6 +14,8 @@ public sealed class PlayerInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.Bind<InputController>().FromComponentInHierarchy().AsSingle();
+        
+        Container.Bind<CameraController>().AsSingle();
 
         Container.BindInterfacesAndSelfTo<PlayerController>().AsSingle().NonLazy();
 
