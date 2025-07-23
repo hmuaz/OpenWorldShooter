@@ -13,7 +13,7 @@ namespace PlayerModule
         
         private readonly InputController _inputController;
 
-        private readonly List<PlayerEntity> _players = new();
+        private readonly List<PlayerView> _players = new();
         
         private readonly List<EnemyEntity> _nearbyEnemies = new();
         
@@ -28,16 +28,16 @@ namespace PlayerModule
             _inputController = inputController;
         }
 
-        public void AddPlayer(PlayerView view, PlayerModel model, Transform cameraPivot, Camera playerCamera)
+        public void AddPlayer(PlayerView view)
         {
-            _players.Add(new PlayerEntity(view, model, cameraPivot, playerCamera));
+            _players.Add(view);
         }
 
         public void Tick()
         {
             for (int playerIndex = 0; playerIndex < _players.Count; playerIndex++)
             {
-                PlayerEntity player = _players[playerIndex];
+                PlayerView player = _players[playerIndex];
 
                 HandleMouseLook(player, _inputController.LookInput);
                 HandleMovement(player, _inputController.MoveInput);
@@ -49,11 +49,11 @@ namespace PlayerModule
             }
         }
 
-        private void HandleMouseLook(PlayerEntity player, Vector2 lookInput)
+        private void HandleMouseLook(PlayerView player, Vector2 lookInput)
         {
             _cameraController.HandleLook(
                 lookInput,
-                player.View.transform,
+                player.transform,
                 player.CameraPivot,
                 player.Model.MouseSensitivity,
                 player.Model.MinVerticalAngle,
@@ -61,12 +61,12 @@ namespace PlayerModule
             );
         }
 
-        private void HandleMovement(PlayerEntity player, Vector2 moveInput)
+        private void HandleMovement(PlayerView player, Vector2 moveInput)
         {
-            player.View.Move(moveInput, player.Model.MoveSpeed);
+            player.Move(moveInput, player.Model.MoveSpeed);
         }
 
-        private void Shoot(PlayerEntity player)
+        private void Shoot(PlayerView player)
         {
             _nearbyEnemies.Clear();
             _enemyGrid.GetEnemiesInArea(player.PlayerCamera.transform.position, player.Model.ShootCheckArea, _nearbyEnemies);
@@ -105,25 +105,6 @@ namespace PlayerModule
             if (closestEnemy != null)
             {
                 closestEnemy.OnHit(player.Model.Damage);
-            }
-        }
-
-        public class PlayerEntity
-        {
-            public PlayerView View { get; }
-            
-            public PlayerModel Model { get; }
-            
-            public Transform CameraPivot { get; }
-            
-            public Camera PlayerCamera { get; }
-            
-            public PlayerEntity(PlayerView view, PlayerModel model, Transform cameraPivot, Camera playerCamera)
-            {
-                View = view;
-                Model = model;
-                CameraPivot = cameraPivot;
-                PlayerCamera = playerCamera;
             }
         }
     }

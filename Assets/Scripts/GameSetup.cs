@@ -44,14 +44,9 @@ namespace OpenWorldGame
         private void Start()
         {
             // --- PLAYER ---
-            var playerEntity = _playerFactory.CreatePlayer(_playerSpawnPosition, _playerConfig);
-            _tileController.SetPlayer(playerEntity.View.transform);
-            _playerController.AddPlayer(
-                playerEntity.View,
-                playerEntity.Model,
-                playerEntity.CameraPivot,
-                playerEntity.PlayerCamera
-            );
+            PlayerView view = _playerFactory.CreatePlayer(_playerSpawnPosition, _playerConfig);
+            _tileController.SetPlayer(view.transform);
+            _playerController.AddPlayer(view);
 
             // --- ENEMIES ---
             int enemyTypeCount = _enemyConfigs.Length;

@@ -187,6 +187,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shootEffect: {fileID: 0}
   _hitEffect: {fileID: 0}
+  _cameraPivot: {fileID: 4341603923139714984}
+  _playerCamera: {fileID: 6173238194581629036}
 --- !u!33 &1715623804446104506
 MeshFilter:
   m_ObjectHideFlags: 0

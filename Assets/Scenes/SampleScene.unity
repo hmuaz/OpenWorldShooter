@@ -1004,6 +1004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerSpawnPosition: {x: 0, y: 1, z: 0}
+  _playerConfig: {fileID: 11400000, guid: 17a62bea48071fe40be1aaf8b5aa6fd6, type: 2}
   _enemyConfigs:
   - {fileID: 11400000, guid: 2eba00f673d645f48b6ba4b4d35bbd58, type: 2}
   - {fileID: 11400000, guid: 490361f898d0464419bc0970bf97559b, type: 2}
@@ -1182,6 +1183,7 @@ MonoBehaviour:
   _tilePrefab: {fileID: 614490124925269672, guid: 30a3b457f4e469f47a5f8000de4b57f9, type: 3}
   _radius: 3
   _tileSize: 10
+  _player: {fileID: 0}
   _tileParent: {fileID: 1699875147}
 --- !u!4 &1362675042
 Transform:

@@ -15,14 +15,10 @@ namespace PlayerModule
             _playerViewPrefab = playerViewPrefab;
         }
 
-        public PlayerController.PlayerEntity CreatePlayer(Vector3 spawnPosition, PlayerConfig config)
+        public PlayerView CreatePlayer(Vector3 spawnPosition, PlayerConfig config)
         {
             PlayerView view = _container.InstantiatePrefabForComponent<PlayerView>(_playerViewPrefab);
             view.transform.position = spawnPosition;
-            
-            Transform cameraPivot = view.transform.GetChild(0);
-            
-            Camera playerCamera = cameraPivot.GetChild(0).GetComponent<Camera>();
             
             var model = new PlayerModel(
                 config.maxHealth,
@@ -36,7 +32,9 @@ namespace PlayerModule
                 config.maxVerticalAngle
             );
             
-            return new PlayerController.PlayerEntity(view, model, cameraPivot, playerCamera);
+            view.SetModel(model);
+            
+            return view;
         }
     }
 

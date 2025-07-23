@@ -8,6 +8,20 @@ namespace PlayerModule
         private ParticleSystem _shootEffect;
         [SerializeField] 
         private ParticleSystem _hitEffect;
+        
+        [SerializeField]
+        private Transform _cameraPivot;
+        
+        [SerializeField]
+        private Transform _playerCamera;
+        
+        private PlayerModel _playerModel;
+        
+        public Transform PlayerCamera => _playerCamera;
+        public Transform CameraPivot => _cameraPivot;
+        public PlayerModel Model => _playerModel;
+        
+        
 
         public void PlayShootEffect()
         {
@@ -29,6 +43,11 @@ namespace PlayerModule
         {
             Vector3 move = transform.right * input.x + transform.forward * input.y;
             transform.position += move.normalized * moveSpeed * Time.deltaTime;
+        }
+
+        public void SetModel(PlayerModel playerModel)
+        {
+            _playerModel = playerModel;
         }
     }
 }
