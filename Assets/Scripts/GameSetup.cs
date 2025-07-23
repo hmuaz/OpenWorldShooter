@@ -26,6 +26,9 @@ namespace OpenWorldGame
         [SerializeField] 
         private Vector3 _playerSpawnPosition = Vector3.zero;
 
+        [SerializeField] 
+        private PlayerConfig _playerConfig;
+
         [Header("Enemy Settings")]
         [SerializeField] 
         private EnemyConfig[] _enemyConfigs;
@@ -41,7 +44,7 @@ namespace OpenWorldGame
         private void Start()
         {
             // --- PLAYER ---
-            var playerEntity = _playerFactory.CreatePlayer(_playerSpawnPosition);
+            var playerEntity = _playerFactory.CreatePlayer(_playerSpawnPosition, _playerConfig);
             _tileController.SetPlayer(playerEntity.View.transform);
             _playerController.AddPlayer(
                 playerEntity.View,

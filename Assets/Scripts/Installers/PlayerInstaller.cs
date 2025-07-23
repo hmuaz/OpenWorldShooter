@@ -11,6 +11,7 @@ public sealed class PlayerInstaller : MonoInstaller
     
     [SerializeField] 
     private PlayerConfig _playerConfig;
+    
     public override void InstallBindings()
     {
         Container.Bind<InputController>().FromComponentInHierarchy().AsSingle();
@@ -19,6 +20,6 @@ public sealed class PlayerInstaller : MonoInstaller
 
         Container.BindInterfacesAndSelfTo<PlayerController>().AsSingle().NonLazy();
 
-        Container.Bind<PlayerFactory>().AsSingle() .WithArguments(_playerViewPrefab, _playerConfig);
+        Container.Bind<PlayerFactory>().AsSingle() .WithArguments(_playerViewPrefab);
     }
 }

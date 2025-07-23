@@ -9,16 +9,13 @@ namespace PlayerModule
         
         private readonly PlayerView _playerViewPrefab;
         
-        private readonly PlayerConfig _playerConfig;
-
-        public PlayerFactory(DiContainer container, PlayerView playerViewPrefab, PlayerConfig playerConfig)
+        public PlayerFactory(DiContainer container, PlayerView playerViewPrefab)
         {
             _container = container;
             _playerViewPrefab = playerViewPrefab;
-            _playerConfig = playerConfig;
         }
 
-        public PlayerController.PlayerEntity CreatePlayer(Vector3 spawnPosition)
+        public PlayerController.PlayerEntity CreatePlayer(Vector3 spawnPosition, PlayerConfig config)
         {
             PlayerView view = _container.InstantiatePrefabForComponent<PlayerView>(_playerViewPrefab);
             view.transform.position = spawnPosition;
@@ -27,7 +24,17 @@ namespace PlayerModule
             
             Camera playerCamera = cameraPivot.GetChild(0).GetComponent<Camera>();
             
-            PlayerModel model = new PlayerModel(_playerConfig);
+            var model = new PlayerModel(
+                config.maxHealth,
+                config.damage,
+                config.moveSpeed,
+                config.mouseSensitivity,
+                config.shootDistance,
+                config.hitRadius,
+                config.shootCheckArea,
+                config.minVerticalAngle,
+                config.maxVerticalAngle
+            );
             
             return new PlayerController.PlayerEntity(view, model, cameraPivot, playerCamera);
         }
