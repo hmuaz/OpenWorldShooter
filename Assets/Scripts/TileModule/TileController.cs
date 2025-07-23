@@ -14,13 +14,11 @@ namespace TileModule
         
         private readonly Transform _parent;
         
-        private readonly Dictionary<Vector2Int, TileEntity> _activeTiles = new();
+        private readonly Dictionary<Vector2Int, TileView> _activeTiles = new();
         
         private Transform _player;
         
         private Vector2Int _lastPlayerTile  = new Vector2Int(int.MinValue, int.MinValue);
-        
-        private TileEntity _lastHighlighted;
         
         private List<Vector2Int> _tileCoordinatesToRemoveList = new List<Vector2Int>();
 
@@ -67,17 +65,17 @@ namespace TileModule
                         GameObject tileGameObject = Object.Instantiate(_tilePrefab, currentTilePosition, Quaternion.Euler(90, 0, 0), _parent);
                         TileModel tileModel = new TileModel(currentTileCoordinates, _tileSize);
                         TileView tileView = tileGameObject.GetComponent<TileView>();
-                        TileEntity tileEntity = new TileEntity(tileModel, tileView);
-                        _activeTiles.Add(currentTileCoordinates, tileEntity);
+                        tileView.SetModel(tileModel);
+                        _activeTiles.Add(currentTileCoordinates, tileView);
                     }
                 }
             }
 
-            foreach (KeyValuePair<Vector2Int, TileEntity> activeTilePair in _activeTiles)
+            foreach (KeyValuePair<Vector2Int, TileView> activeTilePair in _activeTiles)
             {
                 if (!neededTileCoordinatesSet.Contains(activeTilePair.Key))
                 {
-                    Object.Destroy(activeTilePair.Value.View.gameObject);
+                    Object.Destroy(activeTilePair.Value.gameObject);
                     _tileCoordinatesToRemoveList.Add(activeTilePair.Key);
                 }
             }

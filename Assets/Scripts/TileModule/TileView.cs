@@ -12,6 +12,8 @@ namespace TileModule
         
         [SerializeField] 
         private Color _highlightColor = Color.yellow;
+        
+        private TileModel _tileModel;
 
         private void Awake()
         {
@@ -20,6 +22,11 @@ namespace TileModule
                 _renderer = GetComponentInChildren<Renderer>();
             }
             SetDefaultColor();
+        }
+
+        public void SetModel(TileModel tileModel)
+        {
+            _tileModel = tileModel;
         }
 
         public void SetDefaultColor()
@@ -45,5 +52,6 @@ namespace TileModule
                 _renderer.material.color = color;
             }
         }
+        
     }
 }
