@@ -15,7 +15,7 @@ namespace PlayerModule
 
         private readonly List<PlayerView> _players = new();
         
-        private readonly List<EnemyEntity> _nearbyEnemies = new();
+        private readonly List<EnemyView> _nearbyEnemies = new();
         
         [Inject]
         private CameraController _cameraController;
@@ -74,12 +74,12 @@ namespace PlayerModule
             Vector3 origin = player.PlayerCamera.transform.position;
             Vector3 direction = player.PlayerCamera.transform.forward;
 
-            EnemyEntity closestEnemy = null;
+            EnemyView closestEnemy = null;
             float closestDistance = player.Model.ShootDistance + 1f;
 
             for (int index = 0; index < _nearbyEnemies.Count; index++)
             {
-                EnemyEntity enemy = _nearbyEnemies[index];
+                EnemyView enemy = _nearbyEnemies[index];
 
                 Vector3 toEnemy = enemy.Position - origin;
                 float projection = Vector3.Dot(toEnemy, direction.normalized);

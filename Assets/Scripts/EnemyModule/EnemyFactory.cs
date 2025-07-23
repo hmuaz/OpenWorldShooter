@@ -15,12 +15,14 @@ namespace EnemyModule
             _enemyViewPrefab = enemyViewPrefab;
         }
 
-        public EnemyEntity CreateEnemy(EnemyConfig config, Vector3 spawnPosition, EnemySpatialGrid grid)
+        public EnemyView CreateEnemy(EnemyConfig config, Vector3 spawnPosition)
         {
             EnemyView view = _container.InstantiatePrefabForComponent<EnemyView>(_enemyViewPrefab);
             view.transform.position = spawnPosition;
+            
             EnemyModel model = new EnemyModel(config);
-            return new EnemyEntity(model, view, grid);
+            view.SetModel(model);
+            return view;
         }
     }
 }

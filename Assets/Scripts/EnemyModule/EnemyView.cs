@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace EnemyModule
 {
@@ -16,11 +18,42 @@ namespace EnemyModule
         [SerializeField]
         private Renderer _renderer;
         
+        [Inject]
+        private SignalCenter _signalCenter;
+        
         private Color _originalColor;
         
         private float _effectTimer = 0f;
+        private float _fireTimer;
         
         private bool _isHitEffectActive = false;
+        
+        private Vector3 _targetPosition;
+        
+        private EnemyModel _model;
+        
+        public float FireTimer
+        {
+            get => _fireTimer;
+            set => _fireTimer = value;
+        }
+        
+        public EnemyModel  Model => _model;
+        
+        public Vector3 TargetPosition
+        {
+            get => _targetPosition;
+            set => _targetPosition = value;
+        }
+
+        public Vector2Int CurrentGridCell
+        {
+            get; private set;
+        }
+        public Vector3 Position => transform.position;
+        public bool IsDead => Model.IsDead;
+
+        public void SetGridCell(Vector2Int cell) => CurrentGridCell = cell;
 
         private void Awake()
         {
@@ -33,6 +66,11 @@ namespace EnemyModule
 
         private void Update()
         {
+            if (IsDead)
+            {
+                return;
+            }
+            
             if (_isHitEffectActive)
             {
                 _effectTimer -= Time.deltaTime;
@@ -42,7 +80,43 @@ namespace EnemyModule
                 }
             }
         }
-
+        
+        public void OnHit(int damage)
+        {
+            if (IsDead)
+            {
+                return;
+            }
+            
+            PlayHitEffect();
+            
+            Model.Health -= damage;
+            
+            if (Model.Health <= 0)
+            {
+                Die();
+            }
+        }
+        
+        public void SetModel(EnemyModel model)
+        {
+            _model =  model;
+        }
+        
+        private void Die()
+        {
+            if (IsDead)
+            {
+                return;
+            }
+            Model.IsDead = true;
+            
+            _signalCenter.Fire(new EnemyDiedSignal(this));
+            
+            Destroy(gameObject);
+        }
+        
+        //Visual Effects
         public void PlayHitEffect()
         {
             if (_renderer == null)
@@ -54,16 +128,6 @@ namespace EnemyModule
             _isHitEffectActive = true;
         }
 
-        public void PlayDeathEffect()
-        {
-            if (_deathParticle != null)
-            {
-                _deathParticle.transform.SetParent(null); 
-                _deathParticle.Play();
-                Destroy(_deathParticle.gameObject, 2f); 
-            }
-        }
-
         private void ResetColor()
         {
             if (_renderer == null)
@@ -73,5 +137,7 @@ namespace EnemyModule
             _renderer.material.color = _originalColor;
             _isHitEffectActive = false;
         }
+        
+        
     }
 }

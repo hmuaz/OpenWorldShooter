@@ -11,7 +11,6 @@ namespace PlayerModule
         
         [SerializeField]
         private Transform _cameraPivot;
-        
         [SerializeField]
         private Transform _playerCamera;
         
@@ -19,10 +18,9 @@ namespace PlayerModule
         
         public Transform PlayerCamera => _playerCamera;
         public Transform CameraPivot => _cameraPivot;
+        
         public PlayerModel Model => _playerModel;
         
-        
-
         public void PlayShootEffect()
         {
             if (_shootEffect != null)

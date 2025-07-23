@@ -53,12 +53,12 @@ namespace OpenWorldGame
             for (int i = 0; i < _enemyCount; i++)
             {
                 EnemyConfig config = _enemyConfigs[Random.Range(0, enemyTypeCount)];
-                Vector3 pos = new Vector3(
+                Vector3 spawnPosition = new Vector3(
                     Random.Range(_enemyAreaMin.x, _enemyAreaMax.x),
                     0f,
                     Random.Range(_enemyAreaMin.y, _enemyAreaMax.y)
                 );
-                _enemyController.AddEnemy(config, pos);
+                _enemyController.AddEnemy(config, spawnPosition);
             }
         }
     }

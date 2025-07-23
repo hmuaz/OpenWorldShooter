@@ -5,6 +5,7 @@ namespace PlayerModule
         private int _health;
         private int _maxHealth;
         private int _damage;
+        
         private float _moveSpeed;
         private float _mouseSensitivity;
         private float _shootDistance;

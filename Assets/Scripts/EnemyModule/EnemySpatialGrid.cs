@@ -10,20 +10,20 @@ public sealed class EnemySpatialGrid
     
     private readonly float _cellSize;
 
-    private readonly Dictionary<Vector2Int, HashSet<EnemyEntity>> _enemyGrid = new();
+    private readonly Dictionary<Vector2Int, HashSet<EnemyView>> _enemyGrid = new();
 
     public EnemySpatialGrid(float cellSize)
     {
         _cellSize = cellSize;
     }
 
-    public void AddEnemy(EnemyEntity enemy)
+    public void AddEnemy(EnemyView enemy)
     {
         Vector2Int cell = GetCell(enemy.Position);
 
         if (!_enemyGrid.TryGetValue(cell, out var set))
         {
-            set = new HashSet<EnemyEntity>();
+            set = new HashSet<EnemyView>();
             _enemyGrid[cell] = set;
         }
         set.Add(enemy);
@@ -31,7 +31,7 @@ public sealed class EnemySpatialGrid
         enemy.SetGridCell(cell);
     }
 
-    public void RemoveEnemy(EnemyEntity enemy, Vector2Int cell)
+    public void RemoveEnemy(EnemyView enemy, Vector2Int cell)
     {
         if (_enemyGrid.TryGetValue(cell, out var set))
         {
@@ -44,7 +44,7 @@ public sealed class EnemySpatialGrid
         }
     }
 
-    public void UpdateEnemyCell(EnemyEntity enemy)
+    public void UpdateEnemyCell(EnemyView enemy)
     {
         Vector2Int newCell = GetCell(enemy.Position);
 
@@ -55,7 +55,7 @@ public sealed class EnemySpatialGrid
         }
     }
 
-    public void GetEnemiesInArea(Vector3 center, float areaSize, List<EnemyEntity> resultList)
+    public void GetEnemiesInArea(Vector3 center, float areaSize, List<EnemyView> resultList)
     {
         int halfCellCount = Mathf.CeilToInt(areaSize / (2f * _cellSize));
         Vector2Int centerCell = GetCell(center);
