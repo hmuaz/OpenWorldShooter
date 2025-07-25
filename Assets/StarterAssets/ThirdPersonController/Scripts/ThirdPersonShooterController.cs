@@ -14,6 +14,12 @@ public class ThirdPersonShooterController : MonoBehaviour
     
     [SerializeField] 
     private Transform _debugTransform;
+    
+    [SerializeField]
+    private Transform _bulletPrefab;
+    
+    [SerializeField]
+    private Transform _spawnBulletPosition;
 
     private StarterAssetsInputs _input;
 
@@ -55,6 +61,13 @@ public class ThirdPersonShooterController : MonoBehaviour
         {
             _aimVirtualCamera.gameObject.SetActive(false);
             _thirdPersonController.RotateOnMove = true;
+        }
+
+        if (_input.shoot)
+        {
+            Vector3 aimDirection = (mouseWorldPosition - _spawnBulletPosition.position).normalized;
+            Instantiate(_bulletPrefab, _spawnBulletPosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+            _input.shoot = false;
         }
     }
     
