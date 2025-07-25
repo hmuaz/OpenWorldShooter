@@ -17,9 +17,12 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private StarterAssetsInputs _input;
 
+    private ThirdPersonController _thirdPersonController;
+
     private void Awake()
     {
         _input = GetComponent<StarterAssetsInputs>();
+        _thirdPersonController = GetComponent<ThirdPersonController>();
     }
 
     void Update()
@@ -40,6 +43,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         if (_input.aim)
         {
             _aimVirtualCamera.gameObject.SetActive(true);
+            _thirdPersonController.RotateOnMove = false;
             
             Vector3 worldAimTarget = mouseWorldPosition;
             worldAimTarget.y = transform.position.y;
@@ -50,6 +54,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         else
         {
             _aimVirtualCamera.gameObject.SetActive(false);
+            _thirdPersonController.RotateOnMove = true;
         }
     }
     
