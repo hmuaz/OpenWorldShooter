@@ -1,4 +1,5 @@
-﻿ using UnityEngine;
+﻿ using Cinemachine;
+ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -74,10 +75,13 @@ namespace StarterAssets
 
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
+        
 
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
+        
+        
 
         // player
         private float _speed;
@@ -159,6 +163,8 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+
+            
         }
 
         private void LateUpdate()
