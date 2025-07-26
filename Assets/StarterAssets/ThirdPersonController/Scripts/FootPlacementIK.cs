@@ -4,21 +4,29 @@ using UnityEngine;
 public class FootPlacementIK : MonoBehaviour
 {
     public Animator animator;
+    
     public Transform leftFootHeel, leftFootToe;
     public Transform rightFootHeel, rightFootToe;
     public Transform rightToeRaycast;
+    
     public LayerMask groundLayer;
+    
     public float raycastDist = 0.5f;
     public float footYOffsetLeft = 0.02f;
     public float footYOffsetRight = 0.02f;
+    public float rightFootZOffset = 0.1f;
+    public float leftFootZOffset = 0.1f;
 
     public Transform leftKneeHint;
     public Transform rightKneeHint;
 
     void OnAnimatorIK(int layerIndex)
     {
+        
+
+        // Kalan orijinal kodun...
         Debug.Log("ik çalıştı");
-        /*if (leftKneeHint != null)
+        if (leftKneeHint != null)
         {
             animator.SetIKHintPositionWeight(AvatarIKHint.LeftKnee, 1f);
             animator.SetIKHintPosition(AvatarIKHint.LeftKnee, leftKneeHint.position);
@@ -27,10 +35,20 @@ public class FootPlacementIK : MonoBehaviour
         {
             animator.SetIKHintPositionWeight(AvatarIKHint.RightKnee, 1f);
             animator.SetIKHintPosition(AvatarIKHint.RightKnee, rightKneeHint.position);
-        }*/
+        }
 
-        DoFootIKLeft(AvatarIKGoal.LeftFoot, leftFootHeel, leftFootToe);
+        DoFootIKLeft(AvatarIKGoal.LeftFoot, leftFootHeel, leftFootToe, footYOffsetLeft);
         DoFootIKRight(AvatarIKGoal.RightFoot, rightFootHeel, rightFootToe, rightToeRaycast);
+        Vector3 leftFootIKPos = animator.GetIKPosition(AvatarIKGoal.LeftFoot);
+        Vector3 rightFootIKPos = animator.GetIKPosition(AvatarIKGoal.RightFoot);
+
+        // 2. En düşük ayağın Y'sini bul
+        float lowestFootY = Mathf.Min(leftFootIKPos.y, rightFootIKPos.y);
+
+        // 3. Hips'in pozisyonunu ayarla (bodyPosition)
+        Vector3 hipsPos = animator.bodyPosition;
+        hipsPos.y = lowestFootY + 0.80f; // 0.85 değeri karakterine göre deneme-yanıl, şimdilik sabit bırak
+        animator.bodyPosition = hipsPos;
     }
 
     private void DoFootIKRight(AvatarIKGoal foot, Transform heel, Transform toe, Transform toeRaycast)
@@ -49,8 +67,7 @@ public class FootPlacementIK : MonoBehaviour
 
         if (heelHit && toeHit)
         {
-            Vector3 footPos = (heelRay.point + toeRayPosition.point) * 0.5f + Vector3.up * footYOffsetLeft;
-            Debug.Log(footPos);
+            Vector3 footPos = (heelRay.point + toeRayPosition.point) * 0.5f + Vector3.up * footYOffsetRight + transform.forward * -rightFootZOffset;
 
             Vector3 footForward = (toeRay.point - heelRay.point);
             Vector3 footNormal = (heelRay.normal + toeRay.normal).normalized;
@@ -59,6 +76,7 @@ public class FootPlacementIK : MonoBehaviour
             {
                 return;
             }
+            
             
             Vector3 toeForwardProjected = Vector3.ProjectOnPlane(toe.forward, toeRayPosition.normal).normalized;
             
@@ -77,7 +95,7 @@ public class FootPlacementIK : MonoBehaviour
         }
         else if (toeHitPosition)
         {
-            Vector3 footPos = toeRayPosition.point + Vector3.up * footYOffsetLeft;
+            Vector3 footPos = toeRayPosition.point + Vector3.up * footYOffsetRight;
 
             Vector3 toeForwardProjected = Vector3.ProjectOnPlane(toe.forward, toeRayPosition.normal).normalized;
 
@@ -99,7 +117,7 @@ public class FootPlacementIK : MonoBehaviour
     }
     
     
-    private void DoFootIKLeft(AvatarIKGoal foot, Transform heel, Transform toe)
+    private void DoFootIKLeft(AvatarIKGoal foot, Transform heel, Transform toe, float offSet)
     {
         Vector3 heelOrigin = heel.position + Vector3.up * 0.1f;
         
@@ -112,7 +130,7 @@ public class FootPlacementIK : MonoBehaviour
 
         if (heelHit && toeHit)
         {
-            Vector3 footPos = (heelRay.point + toeRay.point) * 0.5f + Vector3.up * footYOffsetRight;
+            Vector3 footPos = (heelRay.point + toeRay.point) * 0.5f + Vector3.up * offSet + transform.forward * -leftFootZOffset;
             Debug.Log(footPos);
 
             Vector3 footForward = (toeRay.point - heelRay.point);
@@ -122,6 +140,7 @@ public class FootPlacementIK : MonoBehaviour
             {
                 return;
             }
+            
 
             if (footForward.sqrMagnitude < 0.0001f)
                 footForward = toe.forward;
@@ -137,7 +156,7 @@ public class FootPlacementIK : MonoBehaviour
         }
         else if (toeHit)
         {
-            Vector3 footPos = toeRay.point + Vector3.up * footYOffsetRight;
+            Vector3 footPos = toeRay.point + Vector3.up * offSet;
 
             Vector3 toeForwardProjected = Vector3.ProjectOnPlane(toe.forward, toeRay.normal).normalized;
 
