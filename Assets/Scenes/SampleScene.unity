@@ -2199,6 +2199,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4662888887318765515, guid: 09aade0ecefd01e4b8f7661acf64f5c2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3933
+      objectReference: {fileID: 0}
+    - target: {fileID: 4662888887318765515, guid: 09aade0ecefd01e4b8f7661acf64f5c2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.4841
+      objectReference: {fileID: 0}
     - target: {fileID: 5475875840202900849, guid: 09aade0ecefd01e4b8f7661acf64f5c2, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -3614,7 +3622,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   raycastDist: 0.5
-  footYOffset: 0.11
+  footYOffsetLeft: 0.1
+  footYOffsetRight: 0.15
   leftKneeHint: {fileID: 379706665}
   rightKneeHint: {fileID: 769482586}
 --- !u!1 &1525184454
