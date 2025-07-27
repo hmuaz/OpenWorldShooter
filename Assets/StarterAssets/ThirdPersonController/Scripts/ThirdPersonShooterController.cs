@@ -38,11 +38,20 @@ public class ThirdPersonShooterController : MonoBehaviour
         
         
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            
+
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, _aimColliderMask))
         {
+            Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 1f);
+
             _debugTransform.position = raycastHit.point;
             mouseWorldPosition = raycastHit.point;
+            
+            string colliderTag = raycastHit.collider.tag;
+            
         }
+        
+        
         
         
         
