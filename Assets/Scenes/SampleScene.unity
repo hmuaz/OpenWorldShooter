@@ -4822,8 +4822,8 @@ MonoBehaviour:
         transform: {fileID: 0}
         weight: 0
     m_Offset: {x: 0, y: 0, z: 0}
-    m_MinLimit: -180
-    m_MaxLimit: 180
+    m_MinLimit: -30
+    m_MaxLimit: 30
     m_AimAxis: 4
     m_UpAxis: 2
     m_WorldUpType: 0
@@ -6880,7 +6880,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9edff6d51ecb4b4597fc7a50607b6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  headAimRig: {fileID: 120067068}
+  rig: {fileID: 120067068}
+  headAimConstraint: {fileID: 2117624009}
   headTarget: {fileID: 642476677}
   defaultHeadTargetPos: {x: 0, y: 1.6, z: 0.5}
   enemyHealth: 100

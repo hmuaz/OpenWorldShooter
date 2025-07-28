@@ -10,6 +10,7 @@ public class BulletProjectile : MonoBehaviour
     public Transform headTarget;
     public Enemy enemy;
 
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -45,7 +46,16 @@ public class BulletProjectile : MonoBehaviour
                 enemy.headMoveRoutine = enemy.StartCoroutine(enemy.HeadHitReaction(hitPos, 0.08f, 0.2f));
 
                 enemy.enemyHealth -= 50;
-                enemy.CheckIfEnemyDies();
+                
+                if (enemy.enemyHealth <= 0)
+                {
+                    if (localHitDir.z < 0)
+                        enemy.PlayDeathAnimation("HeadshotFromFrontDeath"); 
+                    else
+                        enemy.PlayDeathAnimation("HeadshotFromBackDeath");
+                    
+                        
+                }
             }
         }
 
