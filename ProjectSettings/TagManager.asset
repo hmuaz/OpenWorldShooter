@@ -8,6 +8,8 @@ TagManager:
   - Head
   - Enemy
   - EnemyParent
+  - RightShoulder
+  - LeftShoulder
   layers:
   - Default
   - TransparentFX

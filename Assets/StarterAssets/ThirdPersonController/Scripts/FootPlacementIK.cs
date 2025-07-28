@@ -25,7 +25,6 @@ public class FootPlacementIK : MonoBehaviour
         
 
         // Kalan orijinal kodun...
-        Debug.Log("ik çalıştı");
         if (leftKneeHint != null)
         {
             animator.SetIKHintPositionWeight(AvatarIKHint.LeftKnee, 1f);

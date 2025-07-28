@@ -45,7 +45,7 @@ public class BulletProjectile : MonoBehaviour
 
                 enemy.headMoveRoutine = enemy.StartCoroutine(enemy.HeadHitReaction(hitPos, 0.08f, 0.2f));
 
-                enemy.enemyHealth -= 50;
+                //enemy.enemyHealth -= 50;
                 
                 if (enemy.enemyHealth <= 0)
                 {
@@ -58,6 +58,49 @@ public class BulletProjectile : MonoBehaviour
                 }
             }
         }
+
+        else if (other.transform.CompareTag("LeftShoulder"))
+        {
+            if (enemy != null)
+            {
+                Debug.Log("shoulderHit");
+
+                Vector3 localHitDir = enemy.transform.InverseTransformDirection(_rigidbody.linearVelocity.normalized);
+
+                Vector3 targetPos;
+                if (localHitDir.z > 0) 
+                    targetPos = new Vector3(0.633f, 0.85f, 0.5f); 
+                else 
+                    targetPos = new Vector3(-0.633f, 1.387f,  0.5f);
+
+                if (enemy.shoulderMoveRoutine != null)
+                    enemy.StopCoroutine(enemy.shoulderMoveRoutine);
+
+                enemy.shoulderMoveRoutine = enemy.StartCoroutine(enemy.ShoulderHitReaction(targetPos, 0.08f, 0.2f));
+            }
+        }
+        else if (other.transform.CompareTag("RightShoulder"))
+        {
+            if (enemy != null)
+            {
+                Debug.Log("shoulderHit");
+
+                Vector3 localHitDir = enemy.transform.InverseTransformDirection(_rigidbody.linearVelocity.normalized);
+
+                Vector3 targetPos;
+                if (localHitDir.z > 0) 
+                    targetPos = new Vector3(-0.633f, 0.85f, 0.5f);
+                else
+                    targetPos = new Vector3(0.633f, 1.387f, 0.5f);
+                
+
+                if (enemy.shoulderMoveRoutine != null)
+                    enemy.StopCoroutine(enemy.shoulderMoveRoutine);
+
+                enemy.shoulderMoveRoutine = enemy.StartCoroutine(enemy.ShoulderHitReaction(targetPos, 0.08f, 0.2f));
+            }
+        }
+        
 
         Destroy(gameObject);
     }

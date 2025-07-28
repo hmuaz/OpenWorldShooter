@@ -8,18 +8,22 @@ public class Enemy : MonoBehaviour
     public MultiAimConstraint headAimConstraint;
 
     public Transform headTarget;
+    public Transform shoulderTarget;
     public Vector3 defaultHeadTargetPos = new Vector3(0f, 1.6f, 0.5f);
+    public Vector3 defaultShoulderTargetPos = new Vector3(0f, 1.2f, 0.7f);
     public Coroutine headMoveRoutine;
     public float enemyHealth = 100f;
 
     public Animator animator;
 
     public Rigidbody[] ragdollBodies;
+    public Coroutine shoulderMoveRoutine;
 
 
     void Start()
     {
         defaultHeadTargetPos = headTarget.localPosition;
+        defaultShoulderTargetPos = shoulderTarget.localPosition;
     }
 
     public void DestroyTheGoddamnRig()
@@ -52,6 +56,33 @@ public class Enemy : MonoBehaviour
         }
 
         headTarget.localPosition = defaultHeadTargetPos;
+    }
+    
+    public IEnumerator ShoulderHitReaction(Vector3 targetPos, float duration, float returnDelay)
+    {
+        Vector3 startPos = shoulderTarget.localPosition;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            shoulderTarget.localPosition = Vector3.Lerp(startPos, targetPos, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        shoulderTarget.localPosition = targetPos;
+
+        yield return new WaitForSeconds(returnDelay);
+
+        timer = 0f;
+        while (timer < duration)
+        {
+            shoulderTarget.localPosition = Vector3.Lerp(targetPos, defaultShoulderTargetPos, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        shoulderTarget.localPosition = defaultShoulderTargetPos;
     }
 
     public void CheckIfEnemyDies(string animationName)
