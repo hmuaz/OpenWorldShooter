@@ -43,6 +43,9 @@ public class BulletProjectile : MonoBehaviour
                     enemy.StopCoroutine(enemy.headMoveRoutine);
 
                 enemy.headMoveRoutine = enemy.StartCoroutine(enemy.HeadHitReaction(hitPos, 0.08f, 0.2f));
+
+                enemy.enemyHealth -= 50;
+                enemy.CheckIfEnemyDies();
             }
         }
 

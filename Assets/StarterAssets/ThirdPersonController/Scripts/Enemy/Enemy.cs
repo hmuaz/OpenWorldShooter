@@ -8,6 +8,12 @@ public class Enemy : MonoBehaviour
     public Transform headTarget;
     public Vector3 defaultHeadTargetPos = new Vector3(0f, 1.6f, 0.5f);
     public Coroutine headMoveRoutine;
+    public float enemyHealth = 100f;
+    
+    public Animator animator;
+    
+    public Rigidbody[] ragdollBodies;
+
 
     
     void Start()
@@ -41,5 +47,30 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
         headTarget.localPosition = defaultHeadTargetPos;
+    }
+
+    public void CheckIfEnemyDies()
+    {
+        if (enemyHealth <= 0)
+        {
+            //animation
+            animator.SetTrigger("HeadshotDeath");
+        }
+    }
+    
+    public void DisableAnimator()
+    {
+        
+        foreach (var rb in ragdollBodies)
+        {
+            Transform bone = rb.transform;
+            bone.position = bone.position; 
+            bone.rotation = bone.rotation;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        
+        animator.enabled = false;
+        
     }
 }
